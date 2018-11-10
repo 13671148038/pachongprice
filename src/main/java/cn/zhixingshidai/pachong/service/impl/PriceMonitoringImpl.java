@@ -34,8 +34,15 @@ public class PriceMonitoringImpl implements PriceMonitoring {
         String wph = ".vip.com/";
         String wykl = ".kaola.com/";
         String dd = ".dangdang.com/";
-        FileWriter fileWriter = new FileWriter("C:/Users/13671/Desktop/pppp.txt", true);
+        String hw = "www.vmall.com";
+        String snyg = "product.suning.com";
+        //西集
+        String xj = "www.xiji.com";
+        //网易
+        String wy = "you.163.com";
+        FileWriter fileWriter = new FileWriter("C:/Users/zhu/Desktop/pppp.txt", true);
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+        int i = 1;
         for (Map<String, Object> item : result) {
             String activity_address = (String) item.get("activity_address");
             String resultP = "";
@@ -45,15 +52,28 @@ public class PriceMonitoringImpl implements PriceMonitoring {
 //            if (activity_address.contains(wykl)) {
 //                resultP = PricePaChongUntil.wykl(item);
 //            }
-            if (activity_address.contains(dd)) {
-                resultP = PricePaChongUntil.dd(item);
+//            if (activity_address.contains(dd)) {
+//                resultP = PricePaChongUntil.dd(item);
+//            }
+//            if (activity_address.contains(hw)) {
+//                resultP = PricePaChongUntil.hw(item);
+//            }
+//            if (activity_address.contains(snyg)) {
+//                resultP = PricePaChongUntil.snyg(item);
+//            }
+//            if (activity_address.contains(xj)) {
+//                resultP = PricePaChongUntil.xj(item);
+//            }
+            if (activity_address.contains(wy)) {
+                resultP = PricePaChongUntil.wy(item);
+                System.out.println(i);
+                i++;
             }
             if (!"".equals(resultP)) {
                 bufferedWriter.write(resultP);
                 bufferedWriter.newLine();
             }
         }
-
         bufferedWriter.flush();
         bufferedWriter.close();
     }

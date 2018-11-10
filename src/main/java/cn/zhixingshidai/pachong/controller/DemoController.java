@@ -101,7 +101,7 @@ public class DemoController {
         //String url = "https://item.taobao.com/item.htm?id=537330014675&ali_trackid=2:mm_167860039_81800429_15620700198:1539757821_144_254978455&pvid=10_222.128.44.223_931_1539053262245";
         //String url = "https://detailskip.taobao.com/service/getData/1/p1/item/detail/sib.htm?itemId=537330014675&sellerId=2776190336&modules=dynStock,qrcode,viewer,price,duty,xmpPromotion,delivery,upp,activity,fqg,zjys,amountRestriction,couponActivity,soldQuantity,originalPrice,tradeContract&callback=onSibRequestSuccess";
         //String url = "https://detailskip.taobao.com/service/getData/1/p1/item/detail/sib.htm?itemId=537330014675&modules=price,xmpPromotion,originalPrice";
-        String url = "http://product.dangdang.com/1287403371.html";
+        String url = "https://www.vmall.com/product/10086471621596.html";
         //String url = "http://product.dangdang.com/1100051270.html";
         String userAgent = "Mozilla/5.0 (Windows NT 10.0;Win64;x64;rv:63.0) Gecko/20100101 Firefox/63.0";
         CloseableHttpClient httpClient = HttpClients.createDefault();
