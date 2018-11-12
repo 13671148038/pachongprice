@@ -3,7 +3,6 @@ package cn.zhixingshidai.pachong.controller;
 import cn.zhixingshidai.pachong.service.PriceMonitoring;
 import cn.zhixingshidai.pachong.until.HttpClientUtil;
 import cn.zhixingshidai.pachong.until.WebDriver;
-import org.apache.http.HeaderElement;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;

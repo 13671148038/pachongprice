@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.4//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.zhixingshidai.pachong.dao.DiscountDao">
     <select id="getAllInto" resultType="map">
-          select discount_id, activity_address,original_price,discount_after_price,discount_price
+          select discount_id,title, activity_address,original_price,discount_after_price,discount_price
           from tb_discount
           where audit_type =4 and data_source is null
     </select>

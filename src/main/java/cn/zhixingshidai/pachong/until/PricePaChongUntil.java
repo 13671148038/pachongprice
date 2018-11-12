@@ -2,7 +2,6 @@ package cn.zhixingshidai.pachong.until;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -11,7 +10,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
-import java.lang.reflect.GenericSignatureFormatError;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.List;
@@ -28,6 +26,11 @@ public class PricePaChongUntil {
 
     private final static CloseableHttpClient httpClient = HttpClients.createDefault();
 
+    //当前优惠后的价格
+    private final static String currentDPrice ="currentDPrice";
+    //当前原价的价格
+    private final static String currentOPrice ="currentOPrice";
+
     //唯品会价格标识 这个预约的没有
     private final static String jgbs = "J_surpriseSprice_wrap";
     //唯品会价格标识 这个预约和没有预约都可以
@@ -42,7 +45,7 @@ public class PricePaChongUntil {
      * @param item
      * @return
      */
-    public static String xj(Map<String, Object> item) {
+    public static Map<String, Object> xj(Map<String, Object> item) {
         String activity_address = (String) item.get("activity_address");
         Long discount_id = (Long) item.get("discount_id");
         Double original_price = (Double) item.get("original_price");
@@ -82,28 +85,39 @@ public class PricePaChongUntil {
                 //原价
                 String mktprice = (String) jdMap.get("mktprice");
                 if (StringUtils.isBlank(price) && StringUtils.isBlank(mktprice)) {
-                    resultP += "商品已下架或拼接的价格路径不对,价格都是空";
+//                    resultP += "商品已下架或拼接的价格路径不对,价格都是空";
+                    item.put(currentDPrice,"商品已下架或拼接的价格路径不对,价格都是空");
+                    item.put(currentOPrice,"商品已下架或拼接的价格路径不对,价格都是空");
                 } else {
                     try {
                         if (!discount_after_price.equals(Double.valueOf(price)) || !original_price.equals(Double.valueOf(mktprice))) {
-                            resultP += "           抓取优惠价:" + price + "       抓取原价" + mktprice;
+//                            resultP += "           抓取优惠价:" + price + "       抓取原价" + mktprice;
+                            item.put(currentDPrice,price);
+                            item.put(currentOPrice,mktprice);
                         } else {
-                            resultP = "";
+                            item=null;
+//                            resultP = "";
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        resultP += "           抓取优惠价:" + price + "       抓取原价" + mktprice;
+                        item.put(currentDPrice,price);
+                        item.put(currentOPrice,mktprice);
+//                        resultP += "           抓取优惠价:" + price + "       抓取原价" + mktprice;
                     }
                 }
             } else {
-                resultP += "商品已下架或拼接的获取价格路径不正确 ";
+//                resultP += "商品已下架或拼接的获取价格路径不正确 ";
+                item.put(currentDPrice,"商品已下架或拼接的获取价格路径不正确");
+                item.put(currentOPrice,"商品已下架或拼接的获取价格路径不正确");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            resultP += "路径错误";
+            item.put(currentDPrice,"路径错误");
+            item.put(currentOPrice,"路径错误");
+//            resultP += "路径错误";
         }
-        return resultP;
+        return item;
     }
 
     /**
@@ -112,7 +126,7 @@ public class PricePaChongUntil {
      * @param item
      * @return
      */
-    public static String wy(Map<String, Object> item) {
+    public static Map<String, Object> wy(Map<String, Object> item) {
         String activity_address = (String) item.get("activity_address");
         Long discount_id = (Long) item.get("discount_id");
         Double original_price = (Double) item.get("original_price");
@@ -157,18 +171,25 @@ public class PricePaChongUntil {
                 try {
                     if (!discount_after_price.equals(Double.valueOf(retailPrice)) || !original_price.equals(Double.valueOf(counterPrice))) {
                         resultP += "           抓取优惠价:" + retailPrice + "       抓取原价" + counterPrice;
+                        item.put(currentDPrice,retailPrice);
+                        item.put(currentOPrice,counterPrice);
                     } else {
                         resultP = "";
+                        item = null;
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    resultP += "           抓取优惠价:" + retailPrice + "       抓取原价" + counterPrice;
+//                    resultP += "           抓取优惠价:" + retailPrice + "       抓取原价" + counterPrice;
+                    item.put(currentDPrice,retailPrice);
+                    item.put(currentOPrice,counterPrice);
                 }
             }
         } catch (Exception e) {
-            resultP += "路径错误";
+            item.put(currentDPrice,"路径错误");
+            item.put(currentOPrice,"路径错误");
+//            resultP += "路径错误";
         }
-        return resultP;
+        return item;
     }
 
     /**
@@ -177,7 +198,7 @@ public class PricePaChongUntil {
      * @param item
      * @return
      */
-    public static String snyg(Map<String, Object> item) {
+    public static Map<String, Object> snyg(Map<String, Object> item) {
         String activity_address = (String) item.get("activity_address");
         Long discount_id = (Long) item.get("discount_id");
         Double original_price = (Double) item.get("original_price");
@@ -247,16 +268,21 @@ public class PricePaChongUntil {
                                 try {
                                     if (!discount_after_price.equals(Double.valueOf(promotionPrice)) || !original_price.equals(Double.valueOf(refPrice))) {
                                         resultP += "           抓取优惠价:" + promotionPrice + "       抓取原价" + refPrice;
+                                        item.put(currentDPrice,promotionPrice);
+                                        item.put(currentOPrice,refPrice);
                                     } else {
+                                        item=null;
                                         resultP = "";
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();
-                                    if ("".equals(promotionPrice)) {
+                                    item.put(currentDPrice,promotionPrice);
+                                    item.put(currentOPrice,refPrice);
+                                   /* if ("".equals(promotionPrice)&&"".equals(refPrice)) {
                                         resultP += "该商品已下架";
                                     } else {
                                         resultP += "           抓取优惠价:" + promotionPrice + "       抓取原价" + refPrice;
-                                    }
+                                    }*/
                                 }
                             }
                         }
@@ -264,13 +290,17 @@ public class PricePaChongUntil {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                resultP += "商品已下架或者该链接不存在";
+                item.put(currentDPrice,"商品已下架或者该链接不存在");
+                item.put(currentOPrice,"商品已下架或者该链接不存在");
+//                resultP += "商品已下架或者该链接不存在";
             }
         } catch (Exception e) {
             e.printStackTrace();
-            resultP += "推广链接错错误";
+            item.put(currentDPrice,"推广链接错错误");
+            item.put(currentOPrice,"推广链接错错误");
+//            resultP += "推广链接错错误";
         }
-        return resultP;
+        return item;
     }
 
     /**
@@ -279,7 +309,7 @@ public class PricePaChongUntil {
      * @param item
      * @return
      */
-    public static String hw(Map<String, Object> item) {
+    public static Map<String, Object> hw(Map<String, Object> item) {
         String activity_address = (String) item.get("activity_address");
         Long discount_id = (Long) item.get("discount_id");
         Double original_price = (Double) item.get("original_price");
@@ -332,24 +362,33 @@ public class PricePaChongUntil {
                         substring(0, stringBuilder.indexOf("\""));
                 try {
                     if (!discount_after_price.equals(Double.valueOf(price)) || !original_price.equals(Double.valueOf(originPrice))) {
-                        resultP += "           抓取优惠价:" + price + "       抓取原价" + originPrice;
+//                        resultP += "           抓取优惠价:" + price + "       抓取原价" + originPrice;
+                        item.put(currentDPrice,price);
+                        item.put(currentOPrice,originPrice);
                     } else {
-                        resultP = "";
+                        item=null;
+//                        resultP = "";
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    resultP += "           抓取优惠价:" + price + "       抓取原价" + originPrice;
+                    item.put(currentDPrice,price);
+                    item.put(currentOPrice,originPrice);
+//                    resultP += "           抓取优惠价:" + price + "       抓取原价" + originPrice;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                resultP += "商品已下架";
+//                resultP += "商品已下架";
+                item.put(currentDPrice,"商品已下架");
+                item.put(currentOPrice,"商品已下架");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            resultP += "推广链接不正确或者无法访问";
+            item.put(currentDPrice,"推广链接不正确或者无法访问");
+            item.put(currentOPrice,"推广链接不正确或者无法访问");
+//            resultP += "推广链接不正确或者无法访问";
         }
 
-        return resultP;
+        return item;
     }
 
     /**
@@ -358,7 +397,7 @@ public class PricePaChongUntil {
      * @param item
      * @return
      */
-    public static String dd(Map<String, Object> item) {
+    public static Map<String, Object> dd(Map<String, Object> item) {
         String activity_address = (String) item.get("activity_address");
         Long discount_id = (Long) item.get("discount_id");
         Double original_price = (Double) item.get("original_price");
@@ -426,19 +465,26 @@ public class PricePaChongUntil {
             }
             try {
                 if (!discount_after_price.equals(Double.valueOf(salePrice)) || !original_price.equals(Double.valueOf(originalPrice))) {
-                    resultP += "           抓取优惠价:" + salePrice + "       抓取原价" + originalPrice;
+//                    resultP += "           抓取优惠价:" + salePrice + "       抓取原价" + originalPrice;
+                    item.put(currentDPrice,salePrice);
+                    item.put(currentOPrice,originalPrice);
                 } else {
-                    resultP = "";
+//                    resultP = "";
+                    item = null;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                resultP += "           抓取优惠价:" + salePrice + "       抓取原价" + originalPrice;
+                item.put(currentDPrice,salePrice);
+                item.put(currentOPrice,originalPrice);
+//                resultP += "           抓取优惠价:" + salePrice + "       抓取原价" + originalPrice;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            resultP += "该商品不存在或者路径不正确或者拉取价格有误";
+            item.put(currentDPrice,"该商品不存在或者路径不正确或者拉取价格有误");
+            item.put(currentOPrice,"该商品不存在或者路径不正确或者拉取价格有误");
+//            resultP += "该商品不存在或者路径不正确或者拉取价格有误";
         }
-        return resultP;
+        return item;
     }
 
     /**
@@ -446,7 +492,7 @@ public class PricePaChongUntil {
      *
      * @return
      */
-    public static String wykl(Map<String, Object> item) {
+    public static Map<String, Object> wykl(Map<String, Object> item) {
         //数据库中网易考拉路径1
         String kl1 = "http://cps.kaola.com/cps/login?unionId=999684142642&uid=&trackingCode=&targetUrl=http%3A%2F%2Fwww.kaola.com%2Fproduct%2F1854995.html";
         //数据库中网易考拉路径2
@@ -472,8 +518,6 @@ public class PricePaChongUntil {
             String productIdBs = "product%2F";
             if (activity_address.contains(productIdBs)) {
                 priductId = stringBuilder.append(activity_address).substring(stringBuilder.indexOf(productIdBs) + productIdBs.length(), stringBuilder.indexOf(".html"));
-            } else {
-                return resultP += "路径错误";
             }
         }
         try {
@@ -492,20 +536,26 @@ public class PricePaChongUntil {
             currentPrice = stringBuilder.delete(0, stringBuilder.indexOf(currentPrice) + currentPrice.length()).substring(0, stringBuilder.indexOf(","));
             try {
                 if (!discount_after_price.equals(Double.valueOf(currentPrice)) || !original_price.equals(Double.valueOf(marketPrice))) {
-                    resultP += "           抓取优惠价:" + currentPrice + "       抓取原价" + marketPrice;
+//                    resultP += "           抓取优惠价:" + currentPrice + "       抓取原价" + marketPrice;
+                    item.put(currentDPrice,currentPrice);
+                    item.put(currentOPrice,marketPrice);
                 } else {
-                    resultP = "";
+                    item = null;
                 }
-                return resultP;
             } catch (Exception e) {
                 e.printStackTrace();
-                resultP += "           抓取优惠价:" + currentPrice + "       抓取原价" + marketPrice;
-                return resultP;
+                item.put(currentDPrice,currentPrice);
+                item.put(currentOPrice,marketPrice);
+//                resultP += "           抓取优惠价:" + currentPrice + "       抓取原价" + marketPrice;
+//                return resultP;
             }
 
         } catch (Exception e) {
-            return resultP += "路径有误";
+            item.put(currentDPrice,"路径有误");
+            item.put(currentOPrice,"路径有误");
+//            return resultP += "路径有误";
         }
+        return item;
     }
 
 
@@ -515,7 +565,7 @@ public class PricePaChongUntil {
      * @param item
      * @return https://detail.vip.com/detail-3559750-654889948.html
      */
-    public static String vip(Map<String, Object> item) {
+    public static Map<String, Object> vip(Map<String, Object> item) {
         //唯品会路径1
         String wph = "https://click.union.vip.com/deeplink/showGoodsDetail?pid=651061118&goodType=0&tra_from=tra%3A248ytswt%3Acha00000%3Amed00000%3Aad000004%3A%3Axwy33mj4%3A%3A&f=dx&cps_code=xX7Rh3X";
         //唯品会路径1
@@ -578,28 +628,28 @@ public class PricePaChongUntil {
                 String mPrice = "J-mPrice\">";
                 String originalP = stringBuilder.delete(0, stringBuilder.indexOf(mPrice) + mPrice.length()).
                         substring(0, stringBuilder.indexOf("<"));
-                //排除价格是90-90这样的情况,如果是就志向是90
+                //排除价格是90-90这样的情况,如果是就是90
                 if (discountP.contains("~")) {
                     String[] split = discountP.split("~");
                     if (split[0].equals(split[1])) {
                         discountP = split[0];
                     }
                 }
-                //排除价格是90~90这样的情况,如果是就志向是90
+                //排除价格是90~90这样的情况,如果是就是90
                 if (originalP.contains("~")) {
                     String[] split = originalP.split("~");
                     if (split[0].equals(split[1])) {
                         originalP = split[0];
                     }
                 }
-                //排除价格是90-90这样的情况,如果是就志向是90
+                //排除价格是90-90这样的情况,如果是就是90
                 if (discountP.contains("-")) {
                     String[] split = discountP.split("-");
                     if (split[0].equals(split[1])) {
                         discountP = split[0];
                     }
                 }
-                //排除价格是90~90这样的情况,如果是就志向是90
+                //排除价格是90~90这样的情况,如果是就是90
                 if (originalP.contains("-")) {
                     String[] split = originalP.split("-");
                     if (split[0].equals(split[1])) {
@@ -608,18 +658,25 @@ public class PricePaChongUntil {
                 }
                 try {
                     if (!Double.valueOf(discountP).equals(discount_after_price) || !Double.valueOf(originalP).equals(original_price)) {
-                        resultP += "           抓取优惠价:" + discountP + "       抓取原价" + originalP;
+//                        resultP += "           抓取优惠价:" + discountP + "       抓取原价" + originalP;
+                        item.put(currentDPrice,discountP);
+                        item.put(currentOPrice,originalP);
                     } else {
                         resultP = "";
+                        item=null;
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    resultP += "           抓取优惠价:" + discountP + "       抓取原价" + originalP;
+//                    resultP += "           抓取优惠价:" + discountP + "       抓取原价" + originalP;
+                    item.put(currentDPrice,discountP);
+                    item.put(currentOPrice,originalP);
                 }
             }
         } catch (Exception e) {
-            resultP += "原链接错误或无发访问";
+//            resultP += "原链接错误或无发访问";
+            item.put(currentDPrice,"原链接错误或无发访问");
+            item.put(currentOPrice,"原链接错误或无发访问");
         }
-        return resultP;
+        return item;
     }
 }

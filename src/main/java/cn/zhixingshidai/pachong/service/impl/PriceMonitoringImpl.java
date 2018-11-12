@@ -2,6 +2,7 @@ package cn.zhixingshidai.pachong.service.impl;
 
 import cn.zhixingshidai.pachong.dao.DiscountDao;
 import cn.zhixingshidai.pachong.service.PriceMonitoring;
+import cn.zhixingshidai.pachong.until.MailUtil;
 import cn.zhixingshidai.pachong.until.PricePaChongUntil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -31,51 +32,101 @@ public class PriceMonitoringImpl implements PriceMonitoring {
     @Override
     public void test1() throws IOException {
         List<Map<String, Object>> result = discountDao.getAllInto();
+        //2ge网优惠折扣地址前缀
+        String erGeDiscountAddress = "http://www.2ge.cn/discount/dis/";
+        //唯品会
         String wph = ".vip.com/";
+//        网易考拉
         String wykl = ".kaola.com/";
+        //当当
         String dd = ".dangdang.com/";
+        //华为
         String hw = "www.vmall.com";
+        //苏宁
         String snyg = "product.suning.com";
         //西集
         String xj = "www.xiji.com";
         //网易
         String wy = "you.163.com";
-        FileWriter fileWriter = new FileWriter("C:/Users/zhu/Desktop/pppp.txt", true);
+        FileWriter fileWriter = new FileWriter("C:/Users/13671/Desktop/pppp.txt", true);
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-        int i = 1;
+        int total = 0;
+        int bTotal = 0;
+        StringBuilder stringBuilder = new StringBuilder();
         for (Map<String, Object> item : result) {
             String activity_address = (String) item.get("activity_address");
-            String resultP = "";
-             /*   if(activity_address.contains(wph)){
-                    resultP = PricePaChongUntil.vip(item);
-                }*/
-//            if (activity_address.contains(wykl)) {
-//                resultP = PricePaChongUntil.wykl(item);
-//            }
-//            if (activity_address.contains(dd)) {
-//                resultP = PricePaChongUntil.dd(item);
-//            }
-//            if (activity_address.contains(hw)) {
-//                resultP = PricePaChongUntil.hw(item);
-//            }
-//            if (activity_address.contains(snyg)) {
-//                resultP = PricePaChongUntil.snyg(item);
-//            }
-//            if (activity_address.contains(xj)) {
-//                resultP = PricePaChongUntil.xj(item);
-//            }
-            if (activity_address.contains(wy)) {
-                resultP = PricePaChongUntil.wy(item);
-                System.out.println(i);
-                i++;
+            Map<String, Object> resultItem = null;
+                if(activity_address.contains(wph)){
+                    resultItem = PricePaChongUntil.vip(item);
+                }
+            if (activity_address.contains(wykl)) {
+                resultItem = PricePaChongUntil.wykl(item);
+                total++;
             }
-            if (!"".equals(resultP)) {
-                bufferedWriter.write(resultP);
-                bufferedWriter.newLine();
+            if (activity_address.contains(dd)) {
+                resultItem = PricePaChongUntil.dd(item);
+                total++;
+            }
+            if (activity_address.contains(hw)) {
+                resultItem = PricePaChongUntil.hw(item);
+                total++;
+            }
+            if (activity_address.contains(snyg)) {
+                resultItem = PricePaChongUntil.snyg(item);
+                total++;
+            }
+            if (activity_address.contains(xj)) {
+                resultItem = PricePaChongUntil.xj(item);
+                total++;
+            }
+            if (activity_address.contains(wy)) {
+                resultItem = PricePaChongUntil.wy(item);
+                total++;
+            }
+            if (resultItem!=null) {
+                bTotal++;
+                String title = (String)resultItem.get("title");
+                Long discount_id = (Long) resultItem.get("discount_id");
+                //2哥链接
+                String ergeAddress = erGeDiscountAddress + discount_id;
+                //原现价
+                Double original_price = (Double) resultItem.get("original_price");
+                //原优惠
+                Double discount_after_price = (Double) resultItem.get("discount_after_price");
+                //现优惠价格
+                String currentDPrice = (String) resultItem.get("currentDPrice");
+                //现原价
+                String currentOPrice = (String) resultItem.get("currentOPrice");
+                stringBuilder.append("原始价格：").
+                        append(original_price).append("  原始折扣价: ").
+                        append(discount_after_price).
+                        append("<br/>").
+                        append("现原价: ").append(currentOPrice).append("  现折扣价:").append(currentDPrice).
+                        append("<br/>").
+                        append("标题： ").append(title).
+                        append("<br/>").
+                        append("链接：").append(ergeAddress).
+                        append("<br/>").
+                        append("商品详情页链接： ").
+                        append(activity_address).
+                        append("<br/>").append("").
+                        append("<br/>");
+//                bufferedWriter.write("");
+//                bufferedWriter.newLine();
             }
         }
-        bufferedWriter.flush();
-        bufferedWriter.close();
+        try {
+            stringBuilder.append("共扫描 ").append(total).append(" 条记录, 价格变动的数量为").append(bTotal).append(" 条");
+            MailUtil.sendMail("zhushaopeng@zhixingshidai.com","优惠折扣非cps商品价格监控结果",  stringBuilder.toString());
+            MailUtil.sendMail("qiaowenbo@zhixingshidai.com","优惠折扣非cps商品价格监控结果",  stringBuilder.toString());
+            MailUtil.sendMail("liuyongming@zhixingshidai.com","优惠折扣非cps商品价格监控结果",  stringBuilder.toString());
+            MailUtil.sendMail("zhangchi@zhixingshidai.com","优惠折扣非cps商品价格监控结果",  stringBuilder.toString());
+            MailUtil.sendMail("zhangheyi@zhixingshidai.com","优惠折扣非cps商品价格监控结果",  stringBuilder.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+//        bufferedWriter.flush();
+//        bufferedWriter.close();
     }
 
 
