@@ -3,7 +3,7 @@ package cn.zhixingshidai.pachong.service.impl;
 import cn.zhixingshidai.pachong.dao.DiscountDao;
 import cn.zhixingshidai.pachong.service.PriceMonitoring;
 import cn.zhixingshidai.pachong.until.MailUtil;
-import cn.zhixingshidai.pachong.until.PricePaChongUntil;
+import cn.zhixingshidai.pachong.until.PricePaChongUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.apache.commons.lang3.StringUtils;
@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.List;
@@ -30,7 +29,7 @@ public class PriceMonitoringImpl implements PriceMonitoring {
     private DiscountDao discountDao;
 
     @Override
-    public void test1() throws IOException {
+    public void test1() {
         List<Map<String, Object>> result = discountDao.getAllInto();
         //2ge网优惠折扣地址前缀
         String erGeDiscountAddress = "http://www.2ge.cn/discount/dis/";
@@ -48,44 +47,48 @@ public class PriceMonitoringImpl implements PriceMonitoring {
         String xj = "www.xiji.com";
         //网易
         String wy = "you.163.com";
-        FileWriter fileWriter = new FileWriter("C:/Users/13671/Desktop/pppp.txt", true);
-        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+        //总共扫描条数
         int total = 0;
+        //价格变动条数
         int bTotal = 0;
         StringBuilder stringBuilder = new StringBuilder();
         for (Map<String, Object> item : result) {
             String activity_address = (String) item.get("activity_address");
+            if (StringUtils.isBlank(activity_address)) {
+                continue;
+            }
             Map<String, Object> resultItem = null;
-                if(activity_address.contains(wph)){
-                    resultItem = PricePaChongUntil.vip(item);
-                }
+            if (activity_address.contains(wph)) {
+                resultItem = PricePaChongUtil.vip(item);
+                total++;
+            }
             if (activity_address.contains(wykl)) {
-                resultItem = PricePaChongUntil.wykl(item);
+                resultItem = PricePaChongUtil.wykl(item);
                 total++;
             }
             if (activity_address.contains(dd)) {
-                resultItem = PricePaChongUntil.dd(item);
+                resultItem = PricePaChongUtil.dd(item);
                 total++;
             }
             if (activity_address.contains(hw)) {
-                resultItem = PricePaChongUntil.hw(item);
+                resultItem = PricePaChongUtil.hw(item);
                 total++;
             }
             if (activity_address.contains(snyg)) {
-                resultItem = PricePaChongUntil.snyg(item);
+                resultItem = PricePaChongUtil.snyg(item);
                 total++;
             }
             if (activity_address.contains(xj)) {
-                resultItem = PricePaChongUntil.xj(item);
+                resultItem = PricePaChongUtil.xj(item);
                 total++;
             }
             if (activity_address.contains(wy)) {
-                resultItem = PricePaChongUntil.wy(item);
+                resultItem = PricePaChongUtil.wy(item);
                 total++;
             }
-            if (resultItem!=null) {
+            if (resultItem != null) {
                 bTotal++;
-                String title = (String)resultItem.get("title");
+                String title = (String) resultItem.get("title");
                 Long discount_id = (Long) resultItem.get("discount_id");
                 //2哥链接
                 String ergeAddress = erGeDiscountAddress + discount_id;
@@ -111,22 +114,19 @@ public class PriceMonitoringImpl implements PriceMonitoring {
                         append(activity_address).
                         append("<br/>").append("").
                         append("<br/>");
-//                bufferedWriter.write("");
-//                bufferedWriter.newLine();
             }
         }
         try {
             stringBuilder.append("共扫描 ").append(total).append(" 条记录, 价格变动的数量为").append(bTotal).append(" 条");
-            MailUtil.sendMail("zhushaopeng@zhixingshidai.com","优惠折扣非cps商品价格监控结果",  stringBuilder.toString());
-            MailUtil.sendMail("qiaowenbo@zhixingshidai.com","优惠折扣非cps商品价格监控结果",  stringBuilder.toString());
-            MailUtil.sendMail("liuyongming@zhixingshidai.com","优惠折扣非cps商品价格监控结果",  stringBuilder.toString());
-            MailUtil.sendMail("zhangchi@zhixingshidai.com","优惠折扣非cps商品价格监控结果",  stringBuilder.toString());
-            MailUtil.sendMail("zhangheyi@zhixingshidai.com","优惠折扣非cps商品价格监控结果",  stringBuilder.toString());
+            MailUtil.sendMail("zhushaopeng@zhixingshidai.com", "优惠折扣非cps商品价格监控结果", stringBuilder.toString());
+           /* MailUtil.sendMail("qiaowenbo@zhixingshidai.com", "优惠折扣非cps商品价格监控结果", stringBuilder.toString());
+            MailUtil.sendMail("liuyongming@zhixingshidai.com", "优惠折扣非cps商品价格监控结果", stringBuilder.toString());
+            MailUtil.sendMail("zhangchi@zhixingshidai.com", "优惠折扣非cps商品价格监控结果", stringBuilder.toString());
+            MailUtil.sendMail("zhangheyi@zhixingshidai.com", "优惠折扣非cps商品价格监控结果", stringBuilder.toString());
+            MailUtil.sendMail("wangfangfang@zhixingshidai.com", "优惠折扣非cps商品价格监控结果", stringBuilder.toString());*/
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        bufferedWriter.flush();
-//        bufferedWriter.close();
     }
 
 

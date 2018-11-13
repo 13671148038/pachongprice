@@ -15,7 +15,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
-public class PricePaChongUntil {
+public class PricePaChongUtil {
 
     //2ge网优惠折扣地址前缀
     private final static String erGeDiscountAddress = "http://www.2ge.cn/discount/dis/";
@@ -27,9 +27,9 @@ public class PricePaChongUntil {
     private final static CloseableHttpClient httpClient = HttpClients.createDefault();
 
     //当前优惠后的价格
-    private final static String currentDPrice ="currentDPrice";
+    private final static String currentDPrice = "currentDPrice";
     //当前原价的价格
-    private final static String currentOPrice ="currentOPrice";
+    private final static String currentOPrice = "currentOPrice";
 
     //唯品会价格标识 这个预约的没有
     private final static String jgbs = "J_surpriseSprice_wrap";
@@ -46,32 +46,32 @@ public class PricePaChongUntil {
      * @return
      */
     public static Map<String, Object> xj(Map<String, Object> item) {
-        String activity_address = (String) item.get("activity_address");
-        Long discount_id = (Long) item.get("discount_id");
-        Double original_price = (Double) item.get("original_price");
-        Double discount_after_price = (Double) item.get("discount_after_price");
-        String resultP =
-                "         2哥链接:" + erGeDiscountAddress + discount_id +
-                        "         库里面原价:" + original_price +
-                        "            库里面优惠价:" + discount_after_price;
-        String getPriceUrl = "http://www.xiji.com/product-ajax_product_price-48773.html";
-        String xijiUrl = "http://www.xiji.com/product-95664.html";
-        String xijiUrl2 = "https://www.linkhaitao.com/index.php?mod=lhdeal&track=46d6vnGHX0ZAfkP7T54zzb7JNM5lCz6jmpn6ylG7uErVdmuTy7W6vUlUAOPq_aLc_c&new=http%3A%2F%2Fwww.xiji.com%2Fproduct-48773.html";
-        //定义商品的id
-        String productId = "";
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.setLength(0);
-        stringBuilder.append(activity_address);
-        if (activity_address.startsWith("http://www.xiji.com/product-")) {
-            stringBuilder.substring(stringBuilder.indexOf("-") + 1, stringBuilder.indexOf(".html"));
-        } else {
-            stringBuilder.delete(stringBuilder.lastIndexOf(".html"), stringBuilder.length()).delete(0, stringBuilder.lastIndexOf("-") + 1);
-        }
-        productId = stringBuilder.toString();
-        //拼接获取价格的路径
-        stringBuilder.setLength(0);
-        getPriceUrl = stringBuilder.append("http://www.xiji.com/product-ajax_product_price-").append(productId).append(".html").toString();
         try {
+            String activity_address = (String) item.get("activity_address");
+            Long discount_id = (Long) item.get("discount_id");
+            Double original_price = (Double) item.get("original_price");
+            Double discount_after_price = (Double) item.get("discount_after_price");
+            String resultP =
+                    "         2哥链接:" + erGeDiscountAddress + discount_id +
+                            "         库里面原价:" + original_price +
+                            "            库里面优惠价:" + discount_after_price;
+            String getPriceUrl = "http://www.xiji.com/product-ajax_product_price-48773.html";
+            String xijiUrl = "http://www.xiji.com/product-95664.html";
+            String xijiUrl2 = "https://www.linkhaitao.com/index.php?mod=lhdeal&track=46d6vnGHX0ZAfkP7T54zzb7JNM5lCz6jmpn6ylG7uErVdmuTy7W6vUlUAOPq_aLc_c&new=http%3A%2F%2Fwww.xiji.com%2Fproduct-48773.html";
+            //定义商品的id
+            String productId = "";
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.setLength(0);
+            stringBuilder.append(activity_address);
+            if (activity_address.startsWith("http://www.xiji.com/product-")) {
+                stringBuilder.substring(stringBuilder.indexOf("-") + 1, stringBuilder.indexOf(".html"));
+            } else {
+                stringBuilder.delete(stringBuilder.lastIndexOf(".html"), stringBuilder.length()).delete(0, stringBuilder.lastIndexOf("-") + 1);
+            }
+            productId = stringBuilder.toString();
+            //拼接获取价格的路径
+            stringBuilder.setLength(0);
+            getPriceUrl = stringBuilder.append("http://www.xiji.com/product-ajax_product_price-").append(productId).append(".html").toString();
             HttpGet httpGet = new HttpGet(getPriceUrl);
             httpGet.setHeader("User-Agent", userAgent);
             CloseableHttpResponse execute = httpClient.execute(httpGet);
@@ -86,35 +86,35 @@ public class PricePaChongUntil {
                 String mktprice = (String) jdMap.get("mktprice");
                 if (StringUtils.isBlank(price) && StringUtils.isBlank(mktprice)) {
 //                    resultP += "商品已下架或拼接的价格路径不对,价格都是空";
-                    item.put(currentDPrice,"商品已下架或拼接的价格路径不对,价格都是空");
-                    item.put(currentOPrice,"商品已下架或拼接的价格路径不对,价格都是空");
+                    item.put(currentDPrice, "商品已下架或拼接的价格路径不对,价格都是空");
+                    item.put(currentOPrice, "商品已下架或拼接的价格路径不对,价格都是空");
                 } else {
                     try {
                         if (!discount_after_price.equals(Double.valueOf(price)) || !original_price.equals(Double.valueOf(mktprice))) {
 //                            resultP += "           抓取优惠价:" + price + "       抓取原价" + mktprice;
-                            item.put(currentDPrice,price);
-                            item.put(currentOPrice,mktprice);
+                            item.put(currentDPrice, price);
+                            item.put(currentOPrice, mktprice);
                         } else {
-                            item=null;
+                            item = null;
 //                            resultP = "";
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        item.put(currentDPrice,price);
-                        item.put(currentOPrice,mktprice);
+                        item.put(currentDPrice, price);
+                        item.put(currentOPrice, mktprice);
 //                        resultP += "           抓取优惠价:" + price + "       抓取原价" + mktprice;
                     }
                 }
             } else {
 //                resultP += "商品已下架或拼接的获取价格路径不正确 ";
-                item.put(currentDPrice,"商品已下架或拼接的获取价格路径不正确");
-                item.put(currentOPrice,"商品已下架或拼接的获取价格路径不正确");
+                item.put(currentDPrice, "商品已下架或拼接的获取价格路径不正确");
+                item.put(currentOPrice, "商品已下架或拼接的获取价格路径不正确");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            item.put(currentDPrice,"路径错误");
-            item.put(currentOPrice,"路径错误");
+            item.put(currentDPrice, "路径错误");
+            item.put(currentOPrice, "路径错误");
 //            resultP += "路径错误";
         }
         return item;
@@ -127,22 +127,22 @@ public class PricePaChongUntil {
      * @return
      */
     public static Map<String, Object> wy(Map<String, Object> item) {
-        String activity_address = (String) item.get("activity_address");
-        Long discount_id = (Long) item.get("discount_id");
-        Double original_price = (Double) item.get("original_price");
-        Double discount_after_price = (Double) item.get("discount_after_price");
-        String resultP =
-                "         2哥链接:" + erGeDiscountAddress + discount_id +
-                        "         库里面原价:" + original_price +
-                        "            库里面优惠价:" + discount_after_price;
-        //数据局原链接
-        String r = "https://www.linkhaitao.com/index.php?mod=lhdeal&track=766eY15GnrSSf8bbskMOhKzGWatN7SFg0o4R_aTPZTHQ4TxjKkp1Q9We5XwRYrQ8m&new=http%3A%2F%2Fyou.163.com%2Fitem%2Fdetail%3Fid%3D1356010%26_stat_area%3Dmod_1_item_19%26_stat_id%3D1010000%26_stat_referer%3DitemList&tag=2ge";
-        //原链接截取标识
-        String bs = "&new=http%3A%2F%2Fyou.163.com%2Fitem%2Fdetail%3Fid%3D";
-        //拼接后的链接
-        String r2 = "http://you.163.com/item/detail?id=";
-        StringBuilder stringBuilder = new StringBuilder(activity_address);
         try {
+            String activity_address = (String) item.get("activity_address");
+            Long discount_id = (Long) item.get("discount_id");
+            Double original_price = (Double) item.get("original_price");
+            Double discount_after_price = (Double) item.get("discount_after_price");
+            String resultP =
+                    "         2哥链接:" + erGeDiscountAddress + discount_id +
+                            "         库里面原价:" + original_price +
+                            "            库里面优惠价:" + discount_after_price;
+            //数据原链接
+            String r = "https://www.linkhaitao.com/index.php?mod=lhdeal&track=766eY15GnrSSf8bbskMOhKzGWatN7SFg0o4R_aTPZTHQ4TxjKkp1Q9We5XwRYrQ8m&new=http%3A%2F%2Fyou.163.com%2Fitem%2Fdetail%3Fid%3D1356010%26_stat_area%3Dmod_1_item_19%26_stat_id%3D1010000%26_stat_referer%3DitemList&tag=2ge";
+            //原链接截取标识
+            String bs = "&new=http%3A%2F%2Fyou.163.com%2Fitem%2Fdetail%3Fid%3D";
+            //拼接后的链接
+            String r2 = "http://you.163.com/item/detail?id=";
+            StringBuilder stringBuilder = new StringBuilder(activity_address);
             if (!activity_address.startsWith("http://you.163.com/item/detail")) {
                 String id = stringBuilder.delete(0, stringBuilder.indexOf(bs) + bs.length()).substring(0, stringBuilder.indexOf("%"));
                 stringBuilder.setLength(0);
@@ -171,8 +171,8 @@ public class PricePaChongUntil {
                 try {
                     if (!discount_after_price.equals(Double.valueOf(retailPrice)) || !original_price.equals(Double.valueOf(counterPrice))) {
                         resultP += "           抓取优惠价:" + retailPrice + "       抓取原价" + counterPrice;
-                        item.put(currentDPrice,retailPrice);
-                        item.put(currentOPrice,counterPrice);
+                        item.put(currentDPrice, retailPrice);
+                        item.put(currentOPrice, counterPrice);
                     } else {
                         resultP = "";
                         item = null;
@@ -180,13 +180,13 @@ public class PricePaChongUntil {
                 } catch (Exception e) {
                     e.printStackTrace();
 //                    resultP += "           抓取优惠价:" + retailPrice + "       抓取原价" + counterPrice;
-                    item.put(currentDPrice,retailPrice);
-                    item.put(currentOPrice,counterPrice);
+                    item.put(currentDPrice, retailPrice);
+                    item.put(currentOPrice, counterPrice);
                 }
             }
         } catch (Exception e) {
-            item.put(currentDPrice,"路径错误");
-            item.put(currentOPrice,"路径错误");
+            item.put(currentDPrice, "路径错误");
+            item.put(currentOPrice, "路径错误");
 //            resultP += "路径错误";
         }
         return item;
@@ -199,22 +199,22 @@ public class PricePaChongUntil {
      * @return
      */
     public static Map<String, Object> snyg(Map<String, Object> item) {
-        String activity_address = (String) item.get("activity_address");
-        Long discount_id = (Long) item.get("discount_id");
-        Double original_price = (Double) item.get("original_price");
-        Double discount_after_price = (Double) item.get("discount_after_price");
-        String resultP =
-                "         2哥链接:" + erGeDiscountAddress + discount_id +
-                        "         库里面原价:" + original_price +
-                        "            库里面优惠价:" + discount_after_price;
-        String url1 = "https://product.suning.com/0070163466/10519124864.html";
-        String url2 = "https://www.linkhaitao.com/index.php?mod=lhdeal&track=f6033OHSpXH2EOH5D6QG6WD1sQwDNWoOwHphIVJ_bfff0TSd0sq5M_apv_bQ02XcC4_c&new=https%3A%2F%2Fproduct.suning.com%2F0070089387%2F193495016.html%3Fclu%3D325574%26safp%3Dd488778a_46602_0_e2c08ea9a2&tag=2ge";
-        // 获取价格的链接 https://pas.suning.com/nspcsale_0_000000000690098567_000000000690098567_0070073727_10_010_0100101.html?callback=pcData
-        String priceUrlPrefix = "https://pas.suning.com/nspcsale_0_";
-        String priceUrlSuffix = "_10_010_0100101.html?callback=pcData";
-        String parameter1 = "";
-        String parameter2 = "";
         try {
+            String activity_address = (String) item.get("activity_address");
+            Long discount_id = (Long) item.get("discount_id");
+            Double original_price = (Double) item.get("original_price");
+            Double discount_after_price = (Double) item.get("discount_after_price");
+            String resultP =
+                    "         2哥链接:" + erGeDiscountAddress + discount_id +
+                            "         库里面原价:" + original_price +
+                            "            库里面优惠价:" + discount_after_price;
+            String url1 = "https://product.suning.com/0070163466/10519124864.html";
+            String url2 = "https://www.linkhaitao.com/index.php?mod=lhdeal&track=f6033OHSpXH2EOH5D6QG6WD1sQwDNWoOwHphIVJ_bfff0TSd0sq5M_apv_bQ02XcC4_c&new=https%3A%2F%2Fproduct.suning.com%2F0070089387%2F193495016.html%3Fclu%3D325574%26safp%3Dd488778a_46602_0_e2c08ea9a2&tag=2ge";
+            // 获取价格的链接 https://pas.suning.com/nspcsale_0_000000000690098567_000000000690098567_0070073727_10_010_0100101.html?callback=pcData
+            String priceUrlPrefix = "https://pas.suning.com/nspcsale_0_";
+            String priceUrlSuffix = "_10_010_0100101.html?callback=pcData";
+            String parameter1 = "";
+            String parameter2 = "";
             StringBuilder stringBuilder = new StringBuilder(activity_address);
             if (activity_address.startsWith("https://product.suning.com/")) {
                 parameter1 = stringBuilder.delete(0, stringBuilder.indexOf(".com/") + 5).substring(0, stringBuilder.indexOf("/"));
@@ -268,16 +268,16 @@ public class PricePaChongUntil {
                                 try {
                                     if (!discount_after_price.equals(Double.valueOf(promotionPrice)) || !original_price.equals(Double.valueOf(refPrice))) {
                                         resultP += "           抓取优惠价:" + promotionPrice + "       抓取原价" + refPrice;
-                                        item.put(currentDPrice,promotionPrice);
-                                        item.put(currentOPrice,refPrice);
+                                        item.put(currentDPrice, promotionPrice);
+                                        item.put(currentOPrice, refPrice);
                                     } else {
-                                        item=null;
+                                        item = null;
                                         resultP = "";
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();
-                                    item.put(currentDPrice,promotionPrice);
-                                    item.put(currentOPrice,refPrice);
+                                    item.put(currentDPrice, promotionPrice);
+                                    item.put(currentOPrice, refPrice);
                                    /* if ("".equals(promotionPrice)&&"".equals(refPrice)) {
                                         resultP += "该商品已下架";
                                     } else {
@@ -290,14 +290,14 @@ public class PricePaChongUntil {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                item.put(currentDPrice,"商品已下架或者该链接不存在");
-                item.put(currentOPrice,"商品已下架或者该链接不存在");
+                item.put(currentDPrice, "商品已下架或者该链接不存在");
+                item.put(currentOPrice, "商品已下架或者该链接不存在");
 //                resultP += "商品已下架或者该链接不存在";
             }
         } catch (Exception e) {
             e.printStackTrace();
-            item.put(currentDPrice,"推广链接错错误");
-            item.put(currentOPrice,"推广链接错错误");
+            item.put(currentDPrice, "推广链接错错误");
+            item.put(currentOPrice, "推广链接错错误");
 //            resultP += "推广链接错错误";
         }
         return item;
@@ -310,24 +310,24 @@ public class PricePaChongUntil {
      * @return
      */
     public static Map<String, Object> hw(Map<String, Object> item) {
-        String activity_address = (String) item.get("activity_address");
-        Long discount_id = (Long) item.get("discount_id");
-        Double original_price = (Double) item.get("original_price");
-        Double discount_after_price = (Double) item.get("discount_after_price");
-        String resultP =
-                "         2哥链接:" + erGeDiscountAddress + discount_id +
-                        "         库里面原价:" + original_price +
-                        "            库里面优惠价:" + discount_after_price;
-        //华为路径第一种情况
-        String url1 = "https://www.vmall.com/product/2749.html#";
-        //华为路径第二种情况
-        String url2 = "https://www.linkhaitao.com/index.php?mod=lhdeal&track=cb751mjy925Akfy_ayAEYl7WTTuAAojfs_bbflWBLWqKwK_aaESDuF14_bnmywQnig_c_c&new=https%3A%2F%2Fwww.vmall.com%2Fproduct%2F3279.html";
-        //拉取价格的路径和第一种路径一样,是从页面中一个长的json字符串中截取
-        //路径前缀
-        String getPriceUrlPreFix = "https://www.vmall.com/product/";
-        //价格路径后缀
-        String getPriceUrlSufFix = ".html";
         try {
+            String activity_address = (String) item.get("activity_address");
+            Long discount_id = (Long) item.get("discount_id");
+            Double original_price = (Double) item.get("original_price");
+            Double discount_after_price = (Double) item.get("discount_after_price");
+            String resultP =
+                    "         2哥链接:" + erGeDiscountAddress + discount_id +
+                            "         库里面原价:" + original_price +
+                            "            库里面优惠价:" + discount_after_price;
+            //华为路径第一种情况
+            String url1 = "https://www.vmall.com/product/2749.html#";
+            //华为路径第二种情况
+            String url2 = "https://www.linkhaitao.com/index.php?mod=lhdeal&track=cb751mjy925Akfy_ayAEYl7WTTuAAojfs_bbflWBLWqKwK_aaESDuF14_bnmywQnig_c_c&new=https%3A%2F%2Fwww.vmall.com%2Fproduct%2F3279.html";
+            //拉取价格的路径和第一种路径一样,是从页面中一个长的json字符串中截取
+            //路径前缀
+            String getPriceUrlPreFix = "https://www.vmall.com/product/";
+            //价格路径后缀
+            String getPriceUrlSufFix = ".html";
             StringBuilder stringBuilder = new StringBuilder(activity_address);
             if (activity_address.startsWith("https://www.vmall.com/product/")) {
                 activity_address = stringBuilder.substring(0, stringBuilder.indexOf("html") + 4).toString();
@@ -363,28 +363,28 @@ public class PricePaChongUntil {
                 try {
                     if (!discount_after_price.equals(Double.valueOf(price)) || !original_price.equals(Double.valueOf(originPrice))) {
 //                        resultP += "           抓取优惠价:" + price + "       抓取原价" + originPrice;
-                        item.put(currentDPrice,price);
-                        item.put(currentOPrice,originPrice);
+                        item.put(currentDPrice, price);
+                        item.put(currentOPrice, originPrice);
                     } else {
-                        item=null;
+                        item = null;
 //                        resultP = "";
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    item.put(currentDPrice,price);
-                    item.put(currentOPrice,originPrice);
+                    item.put(currentDPrice, price);
+                    item.put(currentOPrice, originPrice);
 //                    resultP += "           抓取优惠价:" + price + "       抓取原价" + originPrice;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
 //                resultP += "商品已下架";
-                item.put(currentDPrice,"商品已下架");
-                item.put(currentOPrice,"商品已下架");
+                item.put(currentDPrice, "商品已下架");
+                item.put(currentOPrice, "商品已下架");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            item.put(currentDPrice,"推广链接不正确或者无法访问");
-            item.put(currentOPrice,"推广链接不正确或者无法访问");
+            item.put(currentDPrice, "推广链接不正确或者无法访问");
+            item.put(currentOPrice, "推广链接不正确或者无法访问");
 //            resultP += "推广链接不正确或者无法访问";
         }
 
@@ -398,18 +398,18 @@ public class PricePaChongUntil {
      * @return
      */
     public static Map<String, Object> dd(Map<String, Object> item) {
-        String activity_address = (String) item.get("activity_address");
-        Long discount_id = (Long) item.get("discount_id");
-        Double original_price = (Double) item.get("original_price");
-        Double discount_after_price = (Double) item.get("discount_after_price");
-        String resultP =
-                "         2哥链接:" + erGeDiscountAddress + discount_id +
-                        "         库里面原价:" + original_price +
-                        "            库里面优惠价:" + discount_after_price;
-        String dd1 = "http://product.dangdang.com/1195142169.html?_ddclickunion=P-338121|ad_type=10|sys_id=1#dd_refer=";
-        String dd2 = "http://union.dangdang.com/transfer.php?from=P-338121&ad_type=10&sys_id=1&backurl=http%3A%2F%2Fproduct.dangdang.com%2F1370187577.html";
-        StringBuilder stringBuilder = new StringBuilder();
         try {
+            String activity_address = (String) item.get("activity_address");
+            Long discount_id = (Long) item.get("discount_id");
+            Double original_price = (Double) item.get("original_price");
+            Double discount_after_price = (Double) item.get("discount_after_price");
+            String resultP =
+                    "         2哥链接:" + erGeDiscountAddress + discount_id +
+                            "         库里面原价:" + original_price +
+                            "            库里面优惠价:" + discount_after_price;
+            String dd1 = "http://product.dangdang.com/1195142169.html?_ddclickunion=P-338121|ad_type=10|sys_id=1#dd_refer=";
+            String dd2 = "http://union.dangdang.com/transfer.php?from=P-338121&ad_type=10&sys_id=1&backurl=http%3A%2F%2Fproduct.dangdang.com%2F1370187577.html";
+            StringBuilder stringBuilder = new StringBuilder();
             if (activity_address.startsWith("http://product.dangdang.com/")) {
                 activity_address = activity_address.substring(0, activity_address.indexOf("html") + 4);
             } else if (activity_address.startsWith("http://union.dangdang.com/")) {
@@ -466,22 +466,22 @@ public class PricePaChongUntil {
             try {
                 if (!discount_after_price.equals(Double.valueOf(salePrice)) || !original_price.equals(Double.valueOf(originalPrice))) {
 //                    resultP += "           抓取优惠价:" + salePrice + "       抓取原价" + originalPrice;
-                    item.put(currentDPrice,salePrice);
-                    item.put(currentOPrice,originalPrice);
+                    item.put(currentDPrice, salePrice);
+                    item.put(currentOPrice, originalPrice);
                 } else {
 //                    resultP = "";
                     item = null;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                item.put(currentDPrice,salePrice);
-                item.put(currentOPrice,originalPrice);
+                item.put(currentDPrice, salePrice);
+                item.put(currentOPrice, originalPrice);
 //                resultP += "           抓取优惠价:" + salePrice + "       抓取原价" + originalPrice;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            item.put(currentDPrice,"该商品不存在或者路径不正确或者拉取价格有误");
-            item.put(currentOPrice,"该商品不存在或者路径不正确或者拉取价格有误");
+            item.put(currentDPrice, "该商品不存在或者路径不正确或者拉取价格有误");
+            item.put(currentOPrice, "该商品不存在或者路径不正确或者拉取价格有误");
 //            resultP += "该商品不存在或者路径不正确或者拉取价格有误";
         }
         return item;
@@ -493,34 +493,34 @@ public class PricePaChongUntil {
      * @return
      */
     public static Map<String, Object> wykl(Map<String, Object> item) {
-        //数据库中网易考拉路径1
-        String kl1 = "http://cps.kaola.com/cps/login?unionId=999684142642&uid=&trackingCode=&targetUrl=http%3A%2F%2Fwww.kaola.com%2Fproduct%2F1854995.html";
-        //数据库中网易考拉路径2
-        String kl2 = "https://goods.kaola.com/product/1854995.html";
-        //价格拉取路径前缀后面是pruductId
-        String url = "https://goods.kaola.com/product/getPcGoodsDetailDynamic.json?goodsId=";
-
-        String activity_address = (String) item.get("activity_address");
-        Long discount_id = (Long) item.get("discount_id");
-        Double original_price = (Double) item.get("original_price");
-        Double discount_after_price = (Double) item.get("discount_after_price");
-        String resultP =
-                "         2哥链接:" + erGeDiscountAddress + discount_id +
-                        "         库里面原价:" + original_price +
-                        "            库里面优惠价:" + discount_after_price;
-        String priductId = "";
-        StringBuilder stringBuilder = new StringBuilder();
-        if (activity_address.startsWith("https://goods.kaola.com/product")) {
-            priductId = stringBuilder.append(activity_address).
-                    delete(stringBuilder.indexOf(".html"), stringBuilder.length()).
-                    delete(0, stringBuilder.lastIndexOf("/") + 1).toString();
-        } else if (activity_address.startsWith("http://cps.kaola.com/cps/login")) {
-            String productIdBs = "product%2F";
-            if (activity_address.contains(productIdBs)) {
-                priductId = stringBuilder.append(activity_address).substring(stringBuilder.indexOf(productIdBs) + productIdBs.length(), stringBuilder.indexOf(".html"));
-            }
-        }
         try {
+            //数据库中网易考拉路径1
+            String kl1 = "http://cps.kaola.com/cps/login?unionId=999684142642&uid=&trackingCode=&targetUrl=http%3A%2F%2Fwww.kaola.com%2Fproduct%2F1854995.html";
+            //数据库中网易考拉路径2
+            String kl2 = "https://goods.kaola.com/product/1854995.html";
+            //价格拉取路径前缀后面是pruductId
+            String url = "https://goods.kaola.com/product/getPcGoodsDetailDynamic.json?goodsId=";
+
+            String activity_address = (String) item.get("activity_address");
+            Long discount_id = (Long) item.get("discount_id");
+            Double original_price = (Double) item.get("original_price");
+            Double discount_after_price = (Double) item.get("discount_after_price");
+            String resultP =
+                    "         2哥链接:" + erGeDiscountAddress + discount_id +
+                            "         库里面原价:" + original_price +
+                            "            库里面优惠价:" + discount_after_price;
+            String priductId = "";
+            StringBuilder stringBuilder = new StringBuilder();
+            if (activity_address.startsWith("https://goods.kaola.com/product")) {
+                priductId = stringBuilder.append(activity_address).
+                        delete(stringBuilder.indexOf(".html"), stringBuilder.length()).
+                        delete(0, stringBuilder.lastIndexOf("/") + 1).toString();
+            } else if (activity_address.startsWith("http://cps.kaola.com/cps/login")) {
+                String productIdBs = "product%2F";
+                if (activity_address.contains(productIdBs)) {
+                    priductId = stringBuilder.append(activity_address).substring(stringBuilder.indexOf(productIdBs) + productIdBs.length(), stringBuilder.indexOf(".html"));
+                }
+            }
             HttpGet httpGet = new HttpGet(url + priductId);
             httpGet.setHeader("User-Agent", userAgent);
             CloseableHttpResponse execute = httpClient.execute(httpGet);
@@ -537,22 +537,22 @@ public class PricePaChongUntil {
             try {
                 if (!discount_after_price.equals(Double.valueOf(currentPrice)) || !original_price.equals(Double.valueOf(marketPrice))) {
 //                    resultP += "           抓取优惠价:" + currentPrice + "       抓取原价" + marketPrice;
-                    item.put(currentDPrice,currentPrice);
-                    item.put(currentOPrice,marketPrice);
+                    item.put(currentDPrice, currentPrice);
+                    item.put(currentOPrice, marketPrice);
                 } else {
                     item = null;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                item.put(currentDPrice,currentPrice);
-                item.put(currentOPrice,marketPrice);
+                item.put(currentDPrice, currentPrice);
+                item.put(currentOPrice, marketPrice);
 //                resultP += "           抓取优惠价:" + currentPrice + "       抓取原价" + marketPrice;
 //                return resultP;
             }
 
         } catch (Exception e) {
-            item.put(currentDPrice,"路径有误");
-            item.put(currentOPrice,"路径有误");
+            item.put(currentDPrice, "路径有误");
+            item.put(currentOPrice, "路径有误");
 //            return resultP += "路径有误";
         }
         return item;
@@ -566,25 +566,25 @@ public class PricePaChongUntil {
      * @return https://detail.vip.com/detail-3559750-654889948.html
      */
     public static Map<String, Object> vip(Map<String, Object> item) {
-        //唯品会路径1
-        String wph = "https://click.union.vip.com/deeplink/showGoodsDetail?pid=651061118&goodType=0&tra_from=tra%3A248ytswt%3Acha00000%3Amed00000%3Aad000004%3A%3Axwy33mj4%3A%3A&f=dx&cps_code=xX7Rh3X";
-        //唯品会路径1
-        String wph2 = "https://detail.vip.com/detail-3534252-651061118.html";
-        //唯品会价格拉取路径前缀
-        String urlFreFix = "https://detail.vip.com/detail-184552252-";
-
-        //路径后缀
-        String urlSufFix = ".html";
-
-        String activity_address = (String) item.get("activity_address");
-        Long discount_id = (Long) item.get("discount_id");
-        Double original_price = (Double) item.get("original_price");
-        Double discount_after_price = (Double) item.get("discount_after_price");
-        String resultP =
-                "         2哥链接:" + erGeDiscountAddress + discount_id +
-                        "         库里面原价:" + original_price +
-                        "            库里面优惠价:" + discount_after_price;
         try {
+            //唯品会路径1
+            String wph = "https://click.union.vip.com/deeplink/showGoodsDetail?pid=651061118&goodType=0&tra_from=tra%3A248ytswt%3Acha00000%3Amed00000%3Aad000004%3A%3Axwy33mj4%3A%3A&f=dx&cps_code=xX7Rh3X";
+            //唯品会路径1
+            String wph2 = "https://detail.vip.com/detail-3534252-651061118.html";
+            //唯品会价格拉取路径前缀
+            String urlFreFix = "https://detail.vip.com/detail-184552252-";
+
+            //路径后缀
+            String urlSufFix = ".html";
+
+            String activity_address = (String) item.get("activity_address");
+            Long discount_id = (Long) item.get("discount_id");
+            Double original_price = (Double) item.get("original_price");
+            Double discount_after_price = (Double) item.get("discount_after_price");
+            String resultP =
+                    "         2哥链接:" + erGeDiscountAddress + discount_id +
+                            "         库里面原价:" + original_price +
+                            "            库里面优惠价:" + discount_after_price;
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append(activity_address);
             //后面的字符串
@@ -659,23 +659,23 @@ public class PricePaChongUntil {
                 try {
                     if (!Double.valueOf(discountP).equals(discount_after_price) || !Double.valueOf(originalP).equals(original_price)) {
 //                        resultP += "           抓取优惠价:" + discountP + "       抓取原价" + originalP;
-                        item.put(currentDPrice,discountP);
-                        item.put(currentOPrice,originalP);
+                        item.put(currentDPrice, discountP);
+                        item.put(currentOPrice, originalP);
                     } else {
                         resultP = "";
-                        item=null;
+                        item = null;
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
 //                    resultP += "           抓取优惠价:" + discountP + "       抓取原价" + originalP;
-                    item.put(currentDPrice,discountP);
-                    item.put(currentOPrice,originalP);
+                    item.put(currentDPrice, discountP);
+                    item.put(currentOPrice, originalP);
                 }
             }
         } catch (Exception e) {
 //            resultP += "原链接错误或无发访问";
-            item.put(currentDPrice,"原链接错误或无发访问");
-            item.put(currentOPrice,"原链接错误或无发访问");
+            item.put(currentDPrice, "原链接错误或无发访问");
+            item.put(currentOPrice, "原链接错误或无发访问");
         }
         return item;
     }
