@@ -24,6 +24,8 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.WritableByteChannel;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @RestController
 public class DemoController {
@@ -119,9 +121,22 @@ public class DemoController {
 
     //监控价格
     @RequestMapping("priceMonitoringCompare")
-    public void priceMonitoringCompare() throws Exception {
+    public String priceMonitoringCompare(){
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                    priceMonitoring.test1();
+            }
+        });
 //        priceMonitoring.priceMonitoringCompare();
-        priceMonitoring.test1();
+        return "Hello 2ge";
+    }
+
+    @RequestMapping("JmsTest")
+    public String sendMessageTest(){
+        priceMonitoring.sendMessageTest();
+        return "sdcsd";
     }
 
 }
