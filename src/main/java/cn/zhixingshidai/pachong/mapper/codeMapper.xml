@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.4//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zhixingshidai.pachong.dao.CodeMapper">
+   <select id="getCodeAttr" resultType="map">
+       select goodsWordId,goodsClassId from ${tableName}
+       <where>
+           goodsWordId is not null and goodsClassId is null
+       </where>
+       group by goodsWordId
+   </select>
+
+   <update id="update">
+       update ${tableName}
+       <set>
+           goodsClassId = #{goodsClassId}
+       </set>
+       <where>
+           goodsWordId =#{goodsWordId}
+       </where>
+   </update>
+
+    <select id="getGoodIdByWordId" resultType="String">
+        select goods_class_id from tb_word
+        <where>
+            word_id = #{goodsWordId}
+        </where>
+    </select>
+</mapper>
