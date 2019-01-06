@@ -9,4 +9,6 @@ public interface CodeMapper {
     String getGoodIdByWordId(Map<String, Object> item);
 
     void update(Map<String, Object> item);
+
+    Integer getIdByGoodClassId(String goodClassId);
 }

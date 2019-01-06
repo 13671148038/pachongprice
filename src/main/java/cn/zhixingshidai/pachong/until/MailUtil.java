@@ -1,15 +1,12 @@
 package cn.zhixingshidai.pachong.until;
 
-import java.util.Date;
-import java.util.Properties;
-import java.util.regex.Pattern;
 import javax.mail.Message;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Date;
+import java.util.Properties;
 
 
 public class MailUtil {

@@ -2,6 +2,8 @@ package cn.zhixingshidai.pachong.service.impl;
 
 import cn.zhixingshidai.pachong.dao.CodeMapper;
 import cn.zhixingshidai.pachong.service.CodeService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,23 +16,31 @@ import java.util.Map;
 public class CodeServiceImpl implements CodeService {
     @Autowired
     private CodeMapper codeMapper;
+
     @Override
     public void start() throws InterruptedException {
+        Logger logger = LoggerFactory.getLogger(CodeServiceImpl.class);
         List<Thread> list = new ArrayList<>();
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                Map<String,Object> condition = new HashMap<>();
-                condition.put("tableName","tb_coded_attr");
-                List<Map<String,Object>> result = codeMapper.getCodeAttr(condition);
-                for (Map<String,Object> item:result) {
+                Map<String, Object> condition = new HashMap<>();
+                condition.put("tableName", "tb_coded_attr");
+                List<Map<String, Object>> result = codeMapper.getCodeAttr(condition);
+                for (Map<String, Object> item : result) {
                     //根据wordid查询分类id
                     String goodClassId = codeMapper.getGoodIdByWordId(item);
-                    item.put("goodsClassId",goodClassId);
-                    item.put("tableName","tb_coded_attr");
+                    //根据分类id查找id
+                    Integer id = codeMapper.getIdByGoodClassId(goodClassId);
+                    if (id == null) {
+                        continue;
+                    }
+                    item.put("goodsClassId", id);
+                    item.put("tableName", "tb_coded_attr");
                     codeMapper.update(item);
+                    logger.info("更新tb_coded_attr表 wordId为:"+item.get("goodsWordId")+" 分类id为:"+id);
                 }
-                System.out.println("thread 执行完了");
+                System.out.println("tb_coded_attr 执行完了");
             }
         });
         thread.start();
@@ -38,17 +48,23 @@ public class CodeServiceImpl implements CodeService {
         Thread thread2 = new Thread(new Runnable() {
             @Override
             public void run() {//tb_coded_attr
-                Map<String,Object> condition = new HashMap<>();
-                condition.put("tableName","tb_barcode_0");
-                List<Map<String,Object>> result = codeMapper.getCodeAttr(condition);
-                for (Map<String,Object> item:result) {
+                Map<String, Object> condition = new HashMap<>();
+                condition.put("tableName", "tb_barcode_0");
+                List<Map<String, Object>> result = codeMapper.getCodeAttr(condition);
+                for (Map<String, Object> item : result) {
                     //根据wordid查询分类id
                     String goodClassId = codeMapper.getGoodIdByWordId(item);
-                    item.put("goodsClassId",goodClassId);
-                    item.put("tableName","tb_barcode_0");
+                    //根据分类id查找id
+                    Integer id = codeMapper.getIdByGoodClassId(goodClassId);
+                    if (id == null) {
+                        continue;
+                    }
+                    item.put("goodsClassId", id);
+                    item.put("tableName", "tb_barcode_0");
                     codeMapper.update(item);
+                    logger.info("tb_barcode_0 wordId为:"+item.get("goodsWordId")+" 分类id为:"+id);
                 }
-                System.out.println("thread2 执行完了");
+                System.out.println("tb_barcode_0 执行完了");
             }
         });
         thread2.start();
@@ -56,17 +72,22 @@ public class CodeServiceImpl implements CodeService {
         Thread thread3 = new Thread(new Runnable() {
             @Override
             public void run() {//tb_coded_attr
-                Map<String,Object> condition = new HashMap<>();
-                condition.put("tableName","tb_barcode_1");
-                List<Map<String,Object>> result = codeMapper.getCodeAttr(condition);
-                for (Map<String,Object> item:result) {
+                Map<String, Object> condition = new HashMap<>();
+                condition.put("tableName", "tb_barcode_1");
+                List<Map<String, Object>> result = codeMapper.getCodeAttr(condition);
+                for (Map<String, Object> item : result) {
                     //根据wordid查询分类id
                     String goodClassId = codeMapper.getGoodIdByWordId(item);
-                    item.put("goodsClassId",goodClassId);
-                    item.put("tableName","tb_barcode_1");
+                    Integer id = codeMapper.getIdByGoodClassId(goodClassId);
+                    if (id == null) {
+                        continue;
+                    }
+                    item.put("goodsClassId", id);
+                    item.put("tableName", "tb_barcode_1");
                     codeMapper.update(item);
+                    logger.info("tb_barcode_1 wordId为:"+item.get("goodsWordId")+" 分类id为:"+id);
                 }
-                System.out.println("thread3 执行完了");
+                System.out.println("tb_barcode_1 执行完了");
             }
         });
         thread3.start();
@@ -74,17 +95,22 @@ public class CodeServiceImpl implements CodeService {
         Thread thread4 = new Thread(new Runnable() {
             @Override
             public void run() {//tb_coded_attr
-                Map<String,Object> condition = new HashMap<>();
-                condition.put("tableName","tb_barcode_2");
-                List<Map<String,Object>> result = codeMapper.getCodeAttr(condition);
-                for (Map<String,Object> item:result) {
+                Map<String, Object> condition = new HashMap<>();
+                condition.put("tableName", "tb_barcode_2");
+                List<Map<String, Object>> result = codeMapper.getCodeAttr(condition);
+                for (Map<String, Object> item : result) {
                     //根据wordid查询分类id
                     String goodClassId = codeMapper.getGoodIdByWordId(item);
-                    item.put("goodsClassId",goodClassId);
-                    item.put("tableName","tb_barcode_2");
+                    Integer id = codeMapper.getIdByGoodClassId(goodClassId);
+                    if (id == null) {
+                        continue;
+                    }
+                    item.put("goodsClassId", id);
+                    item.put("tableName", "tb_barcode_2");
                     codeMapper.update(item);
+                    logger.info("tb_barcode_2 wordId为:"+item.get("goodsWordId")+" 分类id为:"+id);
                 }
-                System.out.println("thread4 执行完了");
+                System.out.println("tb_barcode_2 执行完了");
             }
         });
         thread4.start();
@@ -92,17 +118,22 @@ public class CodeServiceImpl implements CodeService {
         Thread thread5 = new Thread(new Runnable() {
             @Override
             public void run() {//tb_coded_attr
-                Map<String,Object> condition = new HashMap<>();
-                condition.put("tableName","tb_barcode_3");
-                List<Map<String,Object>> result = codeMapper.getCodeAttr(condition);
-                for (Map<String,Object> item:result) {
+                Map<String, Object> condition = new HashMap<>();
+                condition.put("tableName", "tb_barcode_3");
+                List<Map<String, Object>> result = codeMapper.getCodeAttr(condition);
+                for (Map<String, Object> item : result) {
                     //根据wordid查询分类id
                     String goodClassId = codeMapper.getGoodIdByWordId(item);
-                    item.put("goodsClassId",goodClassId);
-                    item.put("tableName","tb_barcode_3");
+                    Integer id = codeMapper.getIdByGoodClassId(goodClassId);
+                    if (id == null) {
+                        continue;
+                    }
+                    item.put("goodsClassId", id);
+                    item.put("tableName", "tb_barcode_3");
                     codeMapper.update(item);
+                    logger.info("tb_barcode_3 wordId为:"+item.get("goodsWordId")+" 分类id为:"+id);
                 }
-                System.out.println("thread5 执行完了");
+                System.out.println("tb_barcode_3 执行完了");
             }
         });
         thread5.start();
@@ -110,17 +141,22 @@ public class CodeServiceImpl implements CodeService {
         Thread thread6 = new Thread(new Runnable() {
             @Override
             public void run() {//tb_coded_attr
-                Map<String,Object> condition = new HashMap<>();
-                condition.put("tableName","tb_barcode_4");
-                List<Map<String,Object>> result = codeMapper.getCodeAttr(condition);
-                for (Map<String,Object> item:result) {
+                Map<String, Object> condition = new HashMap<>();
+                condition.put("tableName", "tb_barcode_4");
+                List<Map<String, Object>> result = codeMapper.getCodeAttr(condition);
+                for (Map<String, Object> item : result) {
                     //根据wordid查询分类id
                     String goodClassId = codeMapper.getGoodIdByWordId(item);
-                    item.put("goodsClassId",goodClassId);
-                    item.put("tableName","tb_barcode_4");
+                    Integer id = codeMapper.getIdByGoodClassId(goodClassId);
+                    if (id == null) {
+                        continue;
+                    }
+                    item.put("goodsClassId", id);
+                    item.put("tableName", "tb_barcode_4");
                     codeMapper.update(item);
+                    logger.info("tb_barcode_4 wordId为:"+item.get("goodsWordId")+" 分类id为:"+id);
                 }
-                System.out.println("thread6 执行完了");
+                System.out.println("tb_barcode_4 执行完了");
             }
         });
         thread6.start();
@@ -128,17 +164,22 @@ public class CodeServiceImpl implements CodeService {
         Thread thread7 = new Thread(new Runnable() {
             @Override
             public void run() {//tb_coded_attr
-                Map<String,Object> condition = new HashMap<>();
-                condition.put("tableName","tb_barcode_5");
-                List<Map<String,Object>> result = codeMapper.getCodeAttr(condition);
-                for (Map<String,Object> item:result) {
+                Map<String, Object> condition = new HashMap<>();
+                condition.put("tableName", "tb_barcode_5");
+                List<Map<String, Object>> result = codeMapper.getCodeAttr(condition);
+                for (Map<String, Object> item : result) {
                     //根据wordid查询分类id
                     String goodClassId = codeMapper.getGoodIdByWordId(item);
-                    item.put("goodsClassId",goodClassId);
-                    item.put("tableName","tb_barcode_5");
+                    Integer id = codeMapper.getIdByGoodClassId(goodClassId);
+                    if (id == null) {
+                        continue;
+                    }
+                    item.put("goodsClassId", id);
+                    item.put("tableName", "tb_barcode_5");
                     codeMapper.update(item);
+                    logger.info("tb_barcode_5 wordId为:"+item.get("goodsWordId")+" 分类id为:"+id);
                 }
-                System.out.println("thread7 执行完了");
+                System.out.println("tb_barcode_5 执行完了");
             }
         });
         thread7.start();
@@ -146,17 +187,22 @@ public class CodeServiceImpl implements CodeService {
         Thread thread8 = new Thread(new Runnable() {
             @Override
             public void run() {//tb_coded_attr
-                Map<String,Object> condition = new HashMap<>();
-                condition.put("tableName","tb_barcode_6");
-                List<Map<String,Object>> result = codeMapper.getCodeAttr(condition);
-                for (Map<String,Object> item:result) {
+                Map<String, Object> condition = new HashMap<>();
+                condition.put("tableName", "tb_barcode_6");
+                List<Map<String, Object>> result = codeMapper.getCodeAttr(condition);
+                for (Map<String, Object> item : result) {
                     //根据wordid查询分类id
                     String goodClassId = codeMapper.getGoodIdByWordId(item);
-                    item.put("goodsClassId",goodClassId);
-                    item.put("tableName","tb_barcode_6");
+                    Integer id = codeMapper.getIdByGoodClassId(goodClassId);
+                    if (id == null) {
+                        continue;
+                    }
+                    item.put("goodsClassId", id);
+                    item.put("tableName", "tb_barcode_6");
                     codeMapper.update(item);
+                    logger.info("tb_barcode_6 wordId为:"+item.get("goodsWordId")+" 分类id为:"+id);
                 }
-                System.out.println("thread8 执行完了");
+                System.out.println("tb_barcode_6 执行完了");
             }
         });
         thread8.start();
@@ -164,17 +210,22 @@ public class CodeServiceImpl implements CodeService {
         Thread thread9 = new Thread(new Runnable() {
             @Override
             public void run() {//tb_coded_attr
-                Map<String,Object> condition = new HashMap<>();
-                condition.put("tableName","tb_barcode_7");
-                List<Map<String,Object>> result = codeMapper.getCodeAttr(condition);
-                for (Map<String,Object> item:result) {
+                Map<String, Object> condition = new HashMap<>();
+                condition.put("tableName", "tb_barcode_7");
+                List<Map<String, Object>> result = codeMapper.getCodeAttr(condition);
+                for (Map<String, Object> item : result) {
                     //根据wordid查询分类id
                     String goodClassId = codeMapper.getGoodIdByWordId(item);
-                    item.put("goodsClassId",goodClassId);
-                    item.put("tableName","tb_barcode_7");
+                    Integer id = codeMapper.getIdByGoodClassId(goodClassId);
+                    if (id == null) {
+                        continue;
+                    }
+                    item.put("goodsClassId", id);
+                    item.put("tableName", "tb_barcode_7");
                     codeMapper.update(item);
+                    logger.info("tb_barcode_7 wordId为:"+item.get("goodsWordId")+" 分类id为:"+id);
                 }
-                System.out.println("thread9 执行完了");
+                System.out.println("tb_barcode_7 执行完了");
             }
         });
         thread9.start();
@@ -182,17 +233,22 @@ public class CodeServiceImpl implements CodeService {
         Thread thread10 = new Thread(new Runnable() {
             @Override
             public void run() {//tb_coded_attr
-                Map<String,Object> condition = new HashMap<>();
-                condition.put("tableName","tb_barcode_8");
-                List<Map<String,Object>> result = codeMapper.getCodeAttr(condition);
-                for (Map<String,Object> item:result) {
+                Map<String, Object> condition = new HashMap<>();
+                condition.put("tableName", "tb_barcode_8");
+                List<Map<String, Object>> result = codeMapper.getCodeAttr(condition);
+                for (Map<String, Object> item : result) {
                     //根据wordid查询分类id
                     String goodClassId = codeMapper.getGoodIdByWordId(item);
-                    item.put("goodsClassId",goodClassId);
-                    item.put("tableName","tb_barcode_8");
+                    Integer id = codeMapper.getIdByGoodClassId(goodClassId);
+                    if (id == null) {
+                        continue;
+                    }
+                    item.put("goodsClassId", id);
+                    item.put("tableName", "tb_barcode_8");
                     codeMapper.update(item);
+                    logger.info("tb_barcode_8 wordId为:"+item.get("goodsWordId")+" 分类id为:"+id);
                 }
-                System.out.println("thread10 执行完了");
+                System.out.println("tb_barcode_8 执行完了");
             }
         });
         thread10.start();
@@ -201,22 +257,27 @@ public class CodeServiceImpl implements CodeService {
         Thread thread11 = new Thread(new Runnable() {
             @Override
             public void run() {//tb_coded_attr
-                Map<String,Object> condition = new HashMap<>();
-                condition.put("tableName","tb_barcode_9");
-                List<Map<String,Object>> result = codeMapper.getCodeAttr(condition);
-                for (Map<String,Object> item:result) {
+                Map<String, Object> condition = new HashMap<>();
+                condition.put("tableName", "tb_barcode_9");
+                List<Map<String, Object>> result = codeMapper.getCodeAttr(condition);
+                for (Map<String, Object> item : result) {
                     //根据wordid查询分类id
                     String goodClassId = codeMapper.getGoodIdByWordId(item);
-                    item.put("goodsClassId",goodClassId);
-                    item.put("tableName","tb_barcode_9");
+                    Integer id = codeMapper.getIdByGoodClassId(goodClassId);
+                    if (id == null) {
+                        continue;
+                    }
+                    item.put("goodsClassId", id);
+                    item.put("tableName", "tb_barcode_9");
                     codeMapper.update(item);
+                    logger.info("tb_barcode_9 wordId为:"+item.get("goodsWordId")+" 分类id为:"+id);
                 }
-                System.out.println("thread11 执行完了");
+                System.out.println("tb_barcode_9 执行完了");
             }
         });
         thread11.start();
         list.add(thread11);
-        for (Thread t:list) {
+        for (Thread t : list) {
             t.join();
         }
         System.out.println("全部执行完了");

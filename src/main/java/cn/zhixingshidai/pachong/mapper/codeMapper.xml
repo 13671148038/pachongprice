@@ -4,7 +4,9 @@
    <select id="getCodeAttr" resultType="map">
        select goodsWordId,goodsClassId from ${tableName}
        <where>
-           goodsWordId is not null and goodsClassId is null
+           goodsWordId is not null
+           and (newGoodClassId = 0 or newGoodClassId is null)
+           and (newGoodClassStatus = 0 or newGoodClassStatus is null)
        </where>
        group by goodsWordId
    </select>
@@ -12,10 +14,16 @@
    <update id="update">
        update ${tableName}
        <set>
-           goodsClassId = #{goodsClassId}
+           <if test="goodsClassId != null">
+               newGoodClassId = #{goodsClassId},
+               newGoodClassStatus = 1,
+               newGoodClassUpdateDate = now(),
+           </if>
        </set>
        <where>
            goodsWordId =#{goodsWordId}
+           and (newGoodClassId = 0 or newGoodClassId is null)
+           and (newGoodClassStatus = 0 or newGoodClassStatus is null)
        </where>
    </update>
 
@@ -23,6 +31,12 @@
         select goods_class_id from tb_word
         <where>
             word_id = #{goodsWordId}
+        </where>
+    </select>
+    <select id="getIdByGoodClassId" parameterType="String" resultType="Integer">
+        select id from tb_goods_class
+        <where>
+            goods_class_id = #{goodClassId}
         </where>
     </select>
 </mapper>
