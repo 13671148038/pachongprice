@@ -1,5 +1,6 @@
 package cn.zhixingshidai.pachong;
 
+import cn.zhixingshidai.pachong.until.MailUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.junit.Test;
@@ -58,10 +59,24 @@ public class PachongApplicationTests {
     }
 
     @Test
-    public  void sdc(){
-        String sd="78";
-        Double ds= 78.0;
-        System.out.println(Double.valueOf(sd)==(ds));
+    public  void sdc() throws Exception {
+        StringBuilder stringBuilder = new StringBuilder();
+//        <span onclick="toLoginPage('http://www.2ge.cn/platform/user/toLogin.do')">http://www.2ge.cn/platform/user/toLogin.do</span>
+//	<script>
+//		function toLoginPage(url){
+//				window.open(url)
+//		}
+//	</script>
+        stringBuilder.append("<span onclick=\"toLoginPage('http://www.2ge.cn/platform/user/toLogin.do')\">http://www.2ge.cn/platform/user/toLogin.do</span>");
+        stringBuilder.append("<div>试点城市的");
+        stringBuilder.append("<script>");
+        stringBuilder.append("function toLoginPage(url){");
+        stringBuilder.append("window.open(url)");
+        stringBuilder.append("}");
+        stringBuilder.append("</script>");
+        stringBuilder.append("</div>");
+        MailUtil.sendMail("zhushaopeng@zhixingshidai.com", "跳转", stringBuilder.toString());
+        MailUtil.sendMail("zhuzhu@zhixingshidai.com", "跳转", stringBuilder.toString());
     }
 
 }

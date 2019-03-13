@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style type="text/css">
+
+    #div1 {
+
+    width: 700px;
+
+    height: 120px;
+
+    padding: 10px;
+
+    border: 1px solid #aaaaaa;
+
+    }
+
+
+
+    #drag1 {
+
+    cursor:pointer;
+
+    }
+
+    </style>
+</head>
+
+<body>
+<p>请把 Windows Azure 的图片拖放到矩形中：</p>
+
+<span id="div1"  ondrop="drop(event)"  ondragover="allowDrop(event)"></span>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<img id="drag1"  src="http://www.cnblogs.com/images/cnblogs_com/toutou/699740/t_Azure.png"  draggable="true"  ondragstart="drag(event)"/>
+</body>
+<script>
+    function allowDrop(ev)  {
+        ev.preventDefault();
+    }
+    function drag(ev)  {
+        ev.dataTransfer.setData("Text", ev.target.id);
+    }
+    function drop(ev)  {
+        ev.preventDefault();
+        var data = ev.dataTransfer.getData("Text");
+        var item = document.getElementById(data).cloneNode();
+        ev.target.appendChild(item);
+    }
+</script>
+</html>

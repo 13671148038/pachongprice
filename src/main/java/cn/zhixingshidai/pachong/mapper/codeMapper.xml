@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.4//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.zhixingshidai.pachong.dao.CodeMapper">
-   <select id="getCodeAttr" resultType="map">
-       select goodsWordId,goodsClassId from ${tableName}
+   <select id="getCodeAttr" resultType="Integer">
+       select goodsWordId from ${tableName}
        <where>
-           goodsWordId is not null
-           and (newGoodClassId = 0 or newGoodClassId is null)
-           and (newGoodClassStatus = 0 or newGoodClassStatus is null)
+           goodsWordId is not null and newGoodClassStatus = 0
        </where>
-       group by goodsWordId
    </select>
 
    <update id="update">
@@ -22,13 +19,12 @@
        </set>
        <where>
            goodsWordId =#{goodsWordId}
-           and (newGoodClassId = 0 or newGoodClassId is null)
-           and (newGoodClassStatus = 0 or newGoodClassStatus is null)
+           and newGoodClassStatus = 0
        </where>
    </update>
 
     <select id="getGoodIdByWordId" resultType="String">
-        select goods_class_id from tb_word
+        select goods_class_id from tb_word_face
         <where>
             word_id = #{goodsWordId}
         </where>
