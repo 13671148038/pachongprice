@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.4//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zhixingshidai.pachong.dao.WordDeclareMapper">
+    <sql id="tableName">tb_word_declare</sql>
+    <resultMap id="resultMap" type="cn.zhixingshidai.pachong.pojo.TbWordDeclare">
+        <id property="wordDeclareId" column="word_declare_id"></id>
+        <result property="wordName" column="word_name"></result>
+        <result property="goodsClassId" column="goods_class_id"></result>
+        <result property="link" column="link"></result>
+        <result property="accessory" column="accessory"></result>
+        <result property="remark" column="remark"></result>
+        <result property="userId" column="user_id"></result>
+        <result property="commitTime" column="commit_time"></result>
+        <result property="wordId" column="word_id"></result>
+        <result property="status" column="status"></result>
+        <result property="noPassPrompt" column="noPassPrompt"></result>
+        <result property="source" column="source"></result>
+        <result property="confirmName" column="confirm_name"></result>
+        <result property="classId" column="class_id"></result>
+        <result property="typeId" column="type_id"></result>
+    </resultMap>
+
+    <select id="listWordDeclare" resultMap="resultMap">
+        select word_declare_id,goods_class_id from <include refid="tableName"></include>
+        <where>
+            type_id is null
+        </where>
+    </select>
+
+    <update id="update" parameterType="TbWordDeclare">
+        update <include refid="tableName"></include>
+        <set>
+            type_id=${typeId}
+        </set>
+        <where>
+            word_declare_id = ${wordDeclareId}
+        </where>
+    </update>
+</mapper>

@@ -1,7 +1,7 @@
 package cn.zhixingshidai.pachong.until;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,63 +12,62 @@ import java.net.URL;
 import java.net.URLConnection;
 
 
-/**  
-* @Title: HttpClientUtil.java
-* @Package com.zxsd.util
-* @Description: TODO(发送post，get请求工具类)
-* @author 徐腾 
-* @date 2016年12月22日 上午10:56:58
-* @version V1.0  
-*/ 
+/**
+ * @author 徐腾
+ * @version V1.0
+ * @Title: HttpClientUtil.java
+ * @Package com.zxsd.util
+ * @Description: TODO(发送post ， get请求工具类)
+ * @date 2016年12月22日 上午10:56:58
+ */
 public class HttpClientUtil {
-	
-	private static final Logger LOGGER = LogManager.getLogger(HttpClientUtil.class);
-	
-	  /**
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(HttpClientUtil.class);
+
+    /**
      * 向指定URL发送GET方法的请求
-     * 
-     * @param url
-     *            发送请求的URL
-     * @param param
-     *            请求参数，请求参数应该是 name1=value1&name2=value2 的形式。
+     *
+     * @param url   发送请求的URL
+     * @param param 请求参数，请求参数应该是 name1=value1&name2=value2 的形式。
      * @return URL 所代表远程资源的响应结果
      */
     public static String sendGet(String url, String param) {
-    	
+
         String result = "";
         try {
-        	URLConnection connection = createConnection(url, param);
-           result = doGet(connection);
+            URLConnection connection = createConnection(url, param);
+            result = doGet(connection);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return result;
     }
-    
+
     public static String sendGetWithRetry(String url, String param) {
-    	return sendGetWithRetry(url, param,3,2000,3000);
+        return sendGetWithRetry(url, param, 3, 2000, 3000);
     }
-    public static String sendGetWithRetry(String url, String param,int retryNum,int conTimeout,int readTimeout) {
-    	 String result = "";
-         try {
-         	URLConnection connection = createConnection(url, param);
-         	connection.setConnectTimeout(conTimeout);
-         	connection.setReadTimeout(readTimeout);
+
+    public static String sendGetWithRetry(String url, String param, int retryNum, int conTimeout, int readTimeout) {
+        String result = "";
+        try {
+            URLConnection connection = createConnection(url, param);
+            connection.setConnectTimeout(conTimeout);
+            connection.setReadTimeout(readTimeout);
             result = doGet(connection);
-         } catch(SocketTimeoutException timeoutException) {
-        	 if(retryNum > 0) {
-        		 LOGGER.warn("timeout..",timeoutException);
-        		 return sendGetWithRetry(url, param, --retryNum, conTimeout, readTimeout);
-        	 }
-        	 LOGGER.error("timeout!!",timeoutException);
-         } catch (Exception e) {
-             e.printStackTrace();
-         }
-         return result;
+        } catch (SocketTimeoutException timeoutException) {
+            if (retryNum > 0) {
+                LOGGER.warn("timeout..", timeoutException);
+                return sendGetWithRetry(url, param, --retryNum, conTimeout, readTimeout);
+            }
+            LOGGER.error("timeout!!", timeoutException);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
     }
-    
-    private static String doGet(URLConnection connection)throws IOException {
-    	String result = "";
+
+    private static String doGet(URLConnection connection) throws IOException {
+        String result = "";
         BufferedReader in = null;
         try {
             // 建立实际的连接
@@ -85,7 +84,7 @@ public class HttpClientUtil {
             while ((line = in.readLine()) != null) {
                 result += line;
             }
-        }finally {// 使用finally块来关闭输入流
+        } finally {// 使用finally块来关闭输入流
             try {
                 if (in != null) {
                     in.close();
@@ -96,12 +95,12 @@ public class HttpClientUtil {
         }
         return result;
     }
-    
+
     private static URLConnection createConnection(String url, String queryString) throws IOException {
-    	String urlNameString = url;
-    	if(queryString != null) {
-    		urlNameString += "?" + queryString;
-    	}
+        String urlNameString = url;
+        if (queryString != null) {
+            urlNameString += "?" + queryString;
+        }
         URL realUrl = new URL(urlNameString);
         // 打开和URL之间的连接
         URLConnection connection = realUrl.openConnection();
@@ -115,11 +114,9 @@ public class HttpClientUtil {
 
     /**
      * 向指定 URL 发送POST方法的请求
-     * 
-     * @param url
-     *            发送请求的 URL
-     * @param param
-     *            请求参数，请求参数应该是 name1=value1&name2=value2 的形式。
+     *
+     * @param url   发送请求的 URL
+     * @param param 请求参数，请求参数应该是 name1=value1&name2=value2 的形式。
      * @return 所代表远程资源的响应结果
      */
     public static String sendPost(String url, String param) {
@@ -146,25 +143,24 @@ public class HttpClientUtil {
                 result += line;
             }
         } catch (Exception e) {
-            System.out.println("发送 POST 请求出现异常！"+e);
+            System.out.println("发送 POST 请求出现异常！" + e);
             e.printStackTrace();
         }
         //使用finally块来关闭输出流、输入流
-        finally{
-            try{
-                if(out!=null){
+        finally {
+            try {
+                if (out != null) {
                     out.close();
                 }
-                if(in!=null){
+                if (in != null) {
                     in.close();
                 }
-            }
-            catch(IOException ex){
+            } catch (IOException ex) {
                 ex.printStackTrace();
             }
         }
         return result;
     }
- 
+
 
 }

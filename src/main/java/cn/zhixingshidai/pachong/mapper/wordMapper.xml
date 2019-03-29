@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.4//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zhixingshidai.pachong.dao.WordMapper">
+    <sql id="tableName">tb_word_face</sql>
+    <resultMap id="resultMap" type="cn.zhixingshidai.pachong.pojo.TbWordFace">
+        <id property="wordId" column="word_id"></id>
+        <result property="wordCode" column="word_code"></result>
+        <result property="goodsClassType" column="goods_class_type"></result>
+        <result property="goodsClassId" column="goods_class_id"></result>
+        <result property="userId" column="user_id"></result>
+        <result property="userTrueName" column="user_true_name"></result>
+        <result property="pTitle" column="p_title"></result>
+        <result property="pTitleImage" column="p_title_image"></result>
+        <result property="status" column="status"></result>
+        <result property="isFinal" column="is_final"></result>
+        <result property="isPublish" column="is_publish"></result>
+        <result property="isComment" column="is_comment"></result>
+        <result property="commitDate" column="commit_date"></result>
+        <result property="publishDate" column="publish_date"></result>
+        <result property="lastUpdateDate" column="last_update_date"></result>
+        <result property="pageUrl" column="page_url"></result>
+        <result property="remarks" column="remarks"></result>
+        <result property="tkdTitle" column="tkd_title"></result>
+        <result property="tkdKeyWords" column="tkd_key_words"></result>
+        <result property="tkdDescription" column="tkd_description"></result>
+        <result property="classId" column="class_id"></result>
+        <result property="templetType" column="templet_type"></result>
+        <result property="firstPublishDate" column="first_publish_date"></result>
+        <result property="typeId" column="type_id"></result>
+    </resultMap>
+    <select id="listWordFace" resultMap="resultMap">
+        select word_id,goods_class_id from <include refid="tableName"></include>
+        <where>
+            type_id is null
+        </where>
+    </select>
+
+    <update id="update" parameterType="TbWordFace">
+        update <include refid="tableName"></include>
+        <set>
+            type_id=${typeId}
+        </set>
+        <where>
+            word_id = ${wordId}
+        </where>
+    </update>
+
+    <select id="listWord" resultMap="resultMap">
+        select word_id,goods_class_id from tb_word
+        <where>
+            type_id is null
+        </where>
+    </select>
+
+    <update id="updateWord" parameterType="TbWordFace">
+        update tb_word
+        <set>
+            type_id=${typeId}
+        </set>
+        <where>
+            word_id = ${wordId}
+        </where>
+    </update>
+
+</mapper>

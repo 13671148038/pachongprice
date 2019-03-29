@@ -1,7 +1,9 @@
 package cn.zhixingshidai.pachong.service.impl;
 
 import cn.zhixingshidai.pachong.dao.CodeMapper;
+import cn.zhixingshidai.pachong.pojo.CodeAttrModel;
 import cn.zhixingshidai.pachong.service.CodeService;
+import cn.zhixingshidai.pachong.until.HttpClientUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,9 @@ import java.util.*;
 
 @Service
 public class CodeServiceImpl implements CodeService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(HttpClientUtil.class);
+
     @Autowired
     private CodeMapper codeMapper;
 
@@ -33,7 +38,7 @@ public class CodeServiceImpl implements CodeService {
                     //根据分类id查找id
                     Integer id = codeMapper.getIdByGoodClassId(goodClassId);
                     if (id == null) {
-                        logger.info("tb_coded_attr11 分类:"+goodClassId+"在数据库中为空================================================================");
+                        logger.info("tb_coded_attr11 分类:" + goodClassId + "在数据库中为空================================================================");
                         continue;
                     }
                     item.put("goodsClassId", id);
@@ -64,7 +69,7 @@ public class CodeServiceImpl implements CodeService {
                     //根据分类id查找id
                     Integer id = codeMapper.getIdByGoodClassId(goodClassId);
                     if (id == null) {
-                        logger.info("tb_barcode_0 分类:"+goodClassId+"在数据库中为空================================================================");
+                        logger.info("tb_barcode_0 分类:" + goodClassId + "在数据库中为空================================================================");
                         continue;
                     }
                     item.put("goodsClassId", id);
@@ -94,7 +99,7 @@ public class CodeServiceImpl implements CodeService {
                     String goodClassId = codeMapper.getGoodIdByWordId(item);
                     Integer id = codeMapper.getIdByGoodClassId(goodClassId);
                     if (id == null) {
-                        logger.info("tb_barcode_1 分类:"+goodClassId+"在数据库中为空================================================================");
+                        logger.info("tb_barcode_1 分类:" + goodClassId + "在数据库中为空================================================================");
                         continue;
                     }
                     item.put("goodsClassId", id);
@@ -124,7 +129,7 @@ public class CodeServiceImpl implements CodeService {
                     String goodClassId = codeMapper.getGoodIdByWordId(item);
                     Integer id = codeMapper.getIdByGoodClassId(goodClassId);
                     if (id == null) {
-                        logger.info("tb_barcode_2 分类:"+goodClassId+"在数据库中为空================================================================");
+                        logger.info("tb_barcode_2 分类:" + goodClassId + "在数据库中为空================================================================");
                         continue;
                     }
                     item.put("goodsClassId", id);
@@ -154,7 +159,7 @@ public class CodeServiceImpl implements CodeService {
                     String goodClassId = codeMapper.getGoodIdByWordId(item);
                     Integer id = codeMapper.getIdByGoodClassId(goodClassId);
                     if (id == null) {
-                        logger.info("tb_barcode_3 分类:"+goodClassId+"在数据库中为空================================================================");
+                        logger.info("tb_barcode_3 分类:" + goodClassId + "在数据库中为空================================================================");
                         continue;
                     }
                     item.put("goodsClassId", id);
@@ -184,7 +189,7 @@ public class CodeServiceImpl implements CodeService {
                     String goodClassId = codeMapper.getGoodIdByWordId(item);
                     Integer id = codeMapper.getIdByGoodClassId(goodClassId);
                     if (id == null) {
-                        logger.info("tb_barcode_4 分类:"+goodClassId+"在数据库中为空================================================================");
+                        logger.info("tb_barcode_4 分类:" + goodClassId + "在数据库中为空================================================================");
                         continue;
                     }
                     item.put("goodsClassId", id);
@@ -214,7 +219,7 @@ public class CodeServiceImpl implements CodeService {
                     String goodClassId = codeMapper.getGoodIdByWordId(item);
                     Integer id = codeMapper.getIdByGoodClassId(goodClassId);
                     if (id == null) {
-                        logger.info("tb_barcode_5 分类:"+goodClassId+"在数据库中为空================================================================");
+                        logger.info("tb_barcode_5 分类:" + goodClassId + "在数据库中为空================================================================");
                         continue;
                     }
                     item.put("goodsClassId", id);
@@ -244,7 +249,7 @@ public class CodeServiceImpl implements CodeService {
                     String goodClassId = codeMapper.getGoodIdByWordId(item);
                     Integer id = codeMapper.getIdByGoodClassId(goodClassId);
                     if (id == null) {
-                        logger.info("tb_barcode_6 分类:"+goodClassId+"在数据库中为空================================================================");
+                        logger.info("tb_barcode_6 分类:" + goodClassId + "在数据库中为空================================================================");
                         continue;
                     }
                     item.put("goodsClassId", id);
@@ -275,7 +280,7 @@ public class CodeServiceImpl implements CodeService {
                     String goodClassId = codeMapper.getGoodIdByWordId(item);
                     Integer id = codeMapper.getIdByGoodClassId(goodClassId);
                     if (id == null) {
-                        logger.info("tb_barcode_7 分类:"+goodClassId+"在数据库中为空================================================================");
+                        logger.info("tb_barcode_7 分类:" + goodClassId + "在数据库中为空================================================================");
                         continue;
                     }
                     item.put("goodsClassId", id);
@@ -305,7 +310,7 @@ public class CodeServiceImpl implements CodeService {
                     String goodClassId = codeMapper.getGoodIdByWordId(item);
                     Integer id = codeMapper.getIdByGoodClassId(goodClassId);
                     if (id == null) {
-                        logger.info("tb_barcode_8 分类:"+goodClassId+"在数据库中为空================================================================");
+                        logger.info("tb_barcode_8 分类:" + goodClassId + "在数据库中为空================================================================");
                         continue;
                     }
                     item.put("goodsClassId", id);
@@ -313,8 +318,8 @@ public class CodeServiceImpl implements CodeService {
                     codeMapper.update(item);
                     logger.info("tb_barcode_8 wordId为:" + item.get("goodsWordId") + " 分类id为:" + id);
                     index++;
-                    logger.info("更新tb_barcode_8表 总数为:"+(result.size())+" 当前执行数为:"+index);
-                    System.out.println("更新tb_barcode_8表 总数为:"+(result.size())+" 当前执行数为:"+index);
+                    logger.info("更新tb_barcode_8表 总数为:" + (result.size()) + " 当前执行数为:" + index);
+                    System.out.println("更新tb_barcode_8表 总数为:" + (result.size()) + " 当前执行数为:" + index);
                 }
                 System.out.println("tb_barcode_8 执行完了");
             }
@@ -336,7 +341,7 @@ public class CodeServiceImpl implements CodeService {
                     String goodClassId = codeMapper.getGoodIdByWordId(item);
                     Integer id = codeMapper.getIdByGoodClassId(goodClassId);
                     if (id == null) {
-                        logger.info("更新tb_barcode_9表 分类:"+goodClassId+"在数据库中为空================================================================");
+                        logger.info("更新tb_barcode_9表 分类:" + goodClassId + "在数据库中为空================================================================");
                         continue;
                     }
                     item.put("goodsClassId", id);
@@ -344,8 +349,8 @@ public class CodeServiceImpl implements CodeService {
                     codeMapper.update(item);
                     logger.info("tb_barcode_9 wordId为:" + item.get("goodsWordId") + " 分类id为:" + id);
                     index++;
-                    logger.info("更新tb_barcode_9表 总数为:"+(result.size())+" 当前执行数为:"+index);
-                    System.out.println("更新tb_barcode_9表 总数为:"+(result.size())+" 当前执行数为:"+index);
+                    logger.info("更新tb_barcode_9表 总数为:" + (result.size()) + " 当前执行数为:" + index);
+                    System.out.println("更新tb_barcode_9表 总数为:" + (result.size()) + " 当前执行数为:" + index);
                 }
                 System.out.println("tb_barcode_9 执行完了");
             }
@@ -357,4 +362,60 @@ public class CodeServiceImpl implements CodeService {
         }
         System.out.println("全部执行完了");
     }
+
+    @Override
+    public void startUpdateWordDataisNull() {
+        LOGGER.info("开始执行............");
+        List<Integer> idList = codeMapper.getUpdateWordDateIsNotNull();
+        int size = idList.size();
+        LOGGER.info("总条数:" + size);
+        Collections.sort(idList, (o1, o2) -> o1.compareTo(o2));
+        int index = 0;
+        int num = 1;
+        List<Integer> tempList = new ArrayList<>();
+        Integer idStart = null;
+        Integer idEnd = null;
+        Map<String, Integer> parm = new HashMap<>();
+        for (Integer i : idList) {
+            if (index == 0) {
+                idStart = i;
+            }
+            if (index == 20000 || num == size) {
+                LOGGER.info("当前执行个数:" + num);
+                idEnd = i;
+                index = -1;
+                parm.put("idStart", idStart);
+                parm.put("idEnd", idEnd);
+                LOGGER.info("idStart:" + idStart);
+                LOGGER.info("idEnd:" + idEnd);
+                LOGGER.info("------------------------------------------------");
+                codeMapper.setUpdateWordDateIsNull(parm);
+            }
+            index++;
+            num++;
+        }
+        LOGGER.info("执行结束");
+    }
+
+    @Override
+    public void startUpdateIsUpdateIs0UpdateDateIsNullAndUpdateisUpdateIs3() {
+        List<Integer> ids = codeMapper.getIds();
+    }
+
+    @Override
+    public void asyncCodeAttrToSubmeter() {
+        CodeAttrModel codeAttrModel = new CodeAttrModel();
+        List<String> goodsCodeList = codeMapper.getGoodsCodeList();
+        for (int i = 0; i < goodsCodeList.size(); i++) {
+            System.out.println(i);
+            try {
+                codeAttrModel.setGoodsCode(goodsCodeList.get(i));
+                codeMapper.codeAttrCopyToSubmeter(codeAttrModel);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+
 }

@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.4//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.zhixingshidai.pachong.dao.CodeMapper">
-   <select id="getCodeAttr" resultType="Integer">
-       select goodsWordId from ${tableName}
-       <where>
-           goodsWordId is not null and newGoodClassStatus = 0
-       </where>
-   </select>
+    <select id="getCodeAttr" resultType="Integer">
+        select goodsWordId from ${tableName}
+        <where>
+            goodsWordId is not null and newGoodClassStatus = 0
+        </where>
+    </select>
 
-   <update id="update">
-       update ${tableName}
-       <set>
-           <if test="goodsClassId != null">
-               newGoodClassId = #{goodsClassId},
-               newGoodClassStatus = 1,
-               newGoodClassUpdateDate = now(),
-           </if>
-       </set>
-       <where>
-           goodsWordId =#{goodsWordId}
-           and newGoodClassStatus = 0
-       </where>
-   </update>
+    <update id="update">
+        update ${tableName}
+        <set>
+            <if test="goodsClassId != null">
+                newGoodClassId = #{goodsClassId},
+                newGoodClassStatus = 1,
+                newGoodClassUpdateDate = now(),
+            </if>
+        </set>
+        <where>
+            goodsWordId =#{goodsWordId}
+            and newGoodClassStatus = 0
+        </where>
+    </update>
 
     <select id="getGoodIdByWordId" resultType="String">
         select goods_class_id from tb_word_face
@@ -35,4 +35,67 @@
             goods_class_id = #{goodClassId}
         </where>
     </select>
+
+    <select id="getUpdateWordDateIsNotNull" resultType="integer">
+        select id from tb_coded_attr where updateWordDate is not null
+    </select>
+    <update id="setUpdateWordDateIsNull">
+        update tb_coded_attr
+        <set>
+            updateWordDate = null
+        </set>
+        <where>
+            id &gt;=${idStart} and id &lt;=${idEnd}
+        </where>
+    </update>
+
+    <select id="getIds" resultType="integer">
+        select id
+        from tb_coded_attr where
+        updateDate > '2019-03-21 '
+        and showName is not null
+        and showName!=''
+        and isUpdate =0
+    </select>
+
+    <select id="getGoodsCodeList" resultType="String">
+        select goodsCode from tb_coded_attr
+    </select>
+
+    <update id="codeAttrCopyToSubmeter">
+        update tb_coded_attr attr,tb_barcode_${submeterSuffix} sub
+        <set>
+            sub.goodsImg=attr.goodsImg,
+            sub.categoryId=attr.categoryId,
+            sub.goodsName=attr.goodsName,
+            sub.brandName=attr.brandName,
+            sub.partyContactName=attr.partyContactName,
+            sub.partyContactAddress=attr.partyContactAddress,
+            sub.goodsSpecifications=attr.goodsSpecifications,
+            sub.price=attr.price,
+            sub.status=attr.status,
+            sub.createDate=attr.createDate,
+            sub.updateDate=attr.updateDate,
+            sub.source=attr.source,
+            sub.istag=attr.istag,
+            sub.goodsClassId=attr.goodsClassId,
+            sub.goodsWordId=attr.goodsWordId,
+            sub.updateWordDate=attr.updateWordDate,
+            sub.userId=attr.userId,
+            sub.isUpdate=attr.isUpdate,
+            sub.codeStatus=attr.codeStatus,
+            sub.brandId=attr.brandId,
+            sub.brandStatus=attr.brandStatus,
+            sub.brandUpdateDate=attr.brandUpdateDate,
+            sub.newGoodClassId=attr.newGoodClassId,
+            sub.newGoodClassStatus=attr.newGoodClassStatus,
+            sub.newGoodClassUpdateDate=attr.newGoodClassUpdateDate,
+            sub.alias=attr.alias,
+            sub.showName=attr.showName,
+            sub.type_id=attr.type_id,
+        </set>
+        <where>
+            sub.goodsCode=#{goodsCode} and sub.goodsCode=attr.goodsCode
+        </where>
+    </update>
 </mapper>
