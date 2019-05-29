@@ -24,4 +24,11 @@ public class CodeAttrController {
         return result;
     }
 
+    @RequestMapping("getBarcodeInto")
+    public String getBarcodeInto(String barcode) {
+        String info = codeService.getBarcodeInto(barcode);
+        return info;
+    }
+
+
 }

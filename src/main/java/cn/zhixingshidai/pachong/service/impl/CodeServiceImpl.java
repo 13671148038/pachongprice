@@ -406,15 +406,186 @@ public class CodeServiceImpl implements CodeService {
     public void asyncCodeAttrToSubmeter() {
         CodeAttrModel codeAttrModel = new CodeAttrModel();
         List<String> goodsCodeList = codeMapper.getGoodsCodeList();
-        for (int i = 0; i < goodsCodeList.size(); i++) {
-            System.out.println(i);
-            try {
-                codeAttrModel.setGoodsCode(goodsCodeList.get(i));
-                codeMapper.codeAttrCopyToSubmeter(codeAttrModel);
-            }catch (Exception e){
-                e.printStackTrace();
+        List<String> barcode0 = new ArrayList<>();
+        List<String> barcode1 = new ArrayList<>();
+        List<String> barcode2 = new ArrayList<>();
+        List<String> barcode3 = new ArrayList<>();
+        List<String> barcode4 = new ArrayList<>();
+        List<String> barcode5 = new ArrayList<>();
+        List<String> barcode6 = new ArrayList<>();
+        List<String> barcode7 = new ArrayList<>();
+        List<String> barcode8 = new ArrayList<>();
+        List<String> barcode9 = new ArrayList<>();
+        int size = goodsCodeList.size();
+        int num = 10000;
+        LOGGER.info("总次数:" + size);
+        for (int i = 0; i < size; i++) {
+            String code = goodsCodeList.get(i);
+            String lastChar = code.charAt(code.length() - 1) + "";
+            switch (lastChar) {
+                case "0":
+                    barcode0.add(code);
+                    if (barcode0.size() >= num) {
+                        codeAttrModel.setGoodsCode(lastChar);
+                        codeAttrModel.setGoodsCodeList(barcode0);
+                        codeMapper.codeAttrCopyToSubmeter(codeAttrModel);
+                        barcode0.clear();
+                        LOGGER.info("剩余次数:" + (size - i - 1));
+                    }
+                    break;
+                case "1":
+                    barcode1.add(code);
+                    if (barcode1.size() >= num) {
+                        codeAttrModel.setGoodsCode(lastChar);
+                        codeAttrModel.setGoodsCodeList(barcode1);
+                        codeMapper.codeAttrCopyToSubmeter(codeAttrModel);
+                        barcode1.clear();
+                        LOGGER.info("剩余次数:" + (size - i - 1));
+                    }
+                    break;
+                case "2":
+                    barcode2.add(code);
+                    if (barcode2.size() >= num) {
+                        codeAttrModel.setGoodsCode(lastChar);
+                        codeAttrModel.setGoodsCodeList(barcode2);
+                        codeMapper.codeAttrCopyToSubmeter(codeAttrModel);
+                        barcode2.clear();
+                        LOGGER.info("剩余次数:" + (size - i - 1));
+                    }
+                    break;
+                case "3":
+                    barcode3.add(code);
+                    if (barcode3.size() >= num) {
+                        codeAttrModel.setGoodsCode(lastChar);
+                        codeAttrModel.setGoodsCodeList(barcode3);
+                        codeMapper.codeAttrCopyToSubmeter(codeAttrModel);
+                        barcode3.clear();
+                        LOGGER.info("剩余次数:" + (size - i - 1));
+                    }
+                    break;
+                case "4":
+                    barcode4.add(code);
+                    if (barcode4.size() >= num) {
+                        codeAttrModel.setGoodsCode(lastChar);
+                        codeAttrModel.setGoodsCodeList(barcode4);
+                        codeMapper.codeAttrCopyToSubmeter(codeAttrModel);
+                        barcode4.clear();
+                        LOGGER.info("剩余次数:" + (size - i - 1));
+                    }
+                    break;
+                case "5":
+                    barcode5.add(code);
+                    if (barcode5.size() >= num) {
+                        codeAttrModel.setGoodsCode(lastChar);
+                        codeAttrModel.setGoodsCodeList(barcode5);
+                        codeMapper.codeAttrCopyToSubmeter(codeAttrModel);
+                        barcode5.clear();
+                        LOGGER.info("剩余次数:" + (size - i - 1));
+                    }
+                    break;
+                case "6":
+                    barcode6.add(code);
+                    if (barcode6.size() >= num) {
+                        codeAttrModel.setGoodsCode(lastChar);
+                        codeAttrModel.setGoodsCodeList(barcode6);
+                        codeMapper.codeAttrCopyToSubmeter(codeAttrModel);
+                        barcode6.clear();
+                        LOGGER.info("剩余次数:" + (size - i - 1));
+                    }
+                    break;
+                case "7":
+                    barcode7.add(code);
+                    if (barcode7.size() >= num) {
+                        codeAttrModel.setGoodsCode(lastChar);
+                        codeAttrModel.setGoodsCodeList(barcode7);
+                        codeMapper.codeAttrCopyToSubmeter(codeAttrModel);
+                        barcode7.clear();
+                        LOGGER.info("剩余次数:" + (size - i - 1));
+                    }
+                    break;
+                case "8":
+                    barcode8.add(code);
+                    if (barcode8.size() >= num) {
+                        codeAttrModel.setGoodsCode(lastChar);
+                        codeAttrModel.setGoodsCodeList(barcode8);
+                        codeMapper.codeAttrCopyToSubmeter(codeAttrModel);
+                        barcode8.clear();
+                        LOGGER.info("剩余次数:" + (size - i - 1));
+                    }
+                    break;
+                case "9":
+                    barcode9.add(code);
+                    if (barcode9.size() >= num) {
+                        codeAttrModel.setGoodsCode(lastChar);
+                        codeAttrModel.setGoodsCodeList(barcode9);
+                        codeMapper.codeAttrCopyToSubmeter(codeAttrModel);
+                        barcode9.clear();
+                        LOGGER.info("剩余次数:" + (size - i - 1));
+                    }
+                    break;
             }
         }
+
+        Map<String, List<String>> map = new HashMap<>();
+        map.put("0", barcode0);
+        map.put("1", barcode1);
+        map.put("2", barcode2);
+        map.put("3", barcode3);
+        map.put("4", barcode4);
+        map.put("5", barcode5);
+        map.put("6", barcode6);
+        map.put("7", barcode7);
+        map.put("8", barcode8);
+        map.put("9", barcode9);
+        Set<String> submeters = map.keySet();
+        for (String submeter : submeters) {
+            List<String> list = map.get(submeter);
+            if (list.size() > 0) {
+                codeAttrModel.setGoodsCode(submeter);
+                codeAttrModel.setGoodsCodeList(list);
+                codeMapper.codeAttrCopyToSubmeter(codeAttrModel);
+            }
+
+        }
+        LOGGER.info("执行完毕");
+
+
+    }
+
+    //将已经发布的条码添加到showSearch表表中
+    @Override
+    public void asyncShowSearch() {
+        List<String> temp = new ArrayList<>();
+        //查询已经发布的条形码
+        List<String> publishCodeList = codeMapper.getPublishCode();
+        temp.addAll(publishCodeList);
+        List<String> showSearchCodeList = codeMapper.getShowSearchCode();
+        publishCodeList.removeAll(showSearchCodeList);
+        showSearchCodeList.removeAll(temp);
+
+        if (publishCodeList.size() > 0) {
+            codeMapper.addToShowSearch(publishCodeList);
+        }
+        if (showSearchCodeList.size() > 0) {
+            codeMapper.deleteFromShowSearch(showSearchCodeList);
+        }
+        publishCodeList.forEach(s -> LOGGER.info("添加到showSearch的条码:" + s));
+        System.out.println("添加到showSearch的条码数量:" + publishCodeList.size());
+        publishCodeList.forEach(s -> LOGGER.info("从删除showSearch的条码:" + s));
+        System.out.println("从删除showSearch的条码数量:" + publishCodeList.size());
+    }
+
+    @Override
+    public String getBarcodeInto(String barcode) {
+        CodeAttrModel codeAttrModel = new CodeAttrModel();
+        codeAttrModel.setGoodsCode(barcode);
+        StringBuilder stringBuilder = new StringBuilder();
+        CodeAttrModel main = codeMapper.getCodeAttrByGoodsCode(codeAttrModel);
+        stringBuilder.append(main.toString()).append("\n");
+        CodeAttrModel submeter = codeMapper.getCodeAttrSubmeterByGoodsCode(codeAttrModel);
+        stringBuilder.append(submeter.toString());
+        System.out.println(stringBuilder.toString());
+        return stringBuilder.toString();
     }
 
 

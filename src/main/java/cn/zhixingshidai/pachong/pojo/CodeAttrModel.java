@@ -370,4 +370,47 @@ public class CodeAttrModel implements Serializable {
     public void setIsUpdateAlias(Integer isUpdateAlias) {
         this.isUpdateAlias = isUpdateAlias;
     }
+
+    @Override
+    public String toString() {
+        return "CodeAttrModel{" +
+                ", goodsImg='" + goodsImg + '\'' +
+                ", goodsCode='" + goodsCode + '\'' +
+                ", categoryId='" + categoryId + '\'' +
+                ", goodsName='" + goodsName + '\'' +
+                ", brandName='" + brandName + '\'' +
+                ", partyContactName='" + partyContactName + '\'' +
+                ", partyContactAddress='" + partyContactAddress + '\'' +
+                ", goodsSpecifications='" + goodsSpecifications + '\'' +
+                ", price=" + price +
+                ", status=" + status +
+                ", createDate=" + createDate +
+                ", updateDate=" + updateDate +
+                ", source='" + source + '\'' +
+                ", istag=" + istag +
+                ", goodsClassId='" + goodsClassId + '\'' +
+                ", goodsWordId=" + goodsWordId +
+                ", updateWordDate=" + updateWordDate +
+                ", userId=" + userId +
+                ", isUpdate=" + isUpdate +
+                ", codeStatus=" + codeStatus +
+                ", brandId=" + brandId +
+                ", brandStatus=" + brandStatus +
+                ", brandUpdateDate=" + brandUpdateDate +
+                ", newGoodClassId=" + newGoodClassId +
+                ", newGoodClassStatus=" + newGoodClassStatus +
+                ", newGoodClassUpdateDate=" + newGoodClassUpdateDate +
+                ", alias='" + alias + '\'' +
+                ", showName='" + showName + '\'' +
+                ", typeId=" + typeId +
+                ", goodsCodeList=" + goodsCodeList +
+                ", oldIsUpdate=" + oldIsUpdate +
+                ", isUpdateAlias=" + isUpdateAlias +
+                ", newGoodClassName='" + newGoodClassName + '\'' +
+                ", brandShowName='" + brandShowName + '\'' +
+                ", userTrueName='" + userTrueName + '\'' +
+                ", operateUserId=" + operateUserId +
+                ", submeterSuffix='" + submeterSuffix + '\'' +
+                '}';
+    }
 }

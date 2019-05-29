@@ -14,9 +14,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jms.annotation.JmsListener;
-import org.springframework.jms.core.JmsMessagingTemplate;
-import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedWriter;
@@ -31,11 +28,11 @@ public class PriceMonitoringImpl implements PriceMonitoring {
     @Autowired
     private DiscountDao discountDao;
 
-    @Autowired
+   /* @Autowired
     private JmsMessagingTemplate jmsMessagingTemplate;
 
     private JmsTemplate jmsTemplate;
-
+*/
     @Override
     public void test1() {
         List<Map<String, Object>> result = discountDao.getAllInto();
@@ -139,6 +136,11 @@ public class PriceMonitoringImpl implements PriceMonitoring {
 
     @Override
     public void sendMessageTest() {
+
+    }
+
+   /* @Override
+    public void sendMessageTest() {
         jmsMessagingTemplate.convertAndSend("springBootTestSend","HelloWordMq");
     }
 
@@ -146,7 +148,7 @@ public class PriceMonitoringImpl implements PriceMonitoring {
     public void reciveMessageTest(String text) {
     System.out.println(text);
     }
-
+*/
 
     @Override
     public void priceMonitoringCompare() throws Exception {

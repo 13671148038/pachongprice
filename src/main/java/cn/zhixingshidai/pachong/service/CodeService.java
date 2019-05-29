@@ -5,4 +5,7 @@ public interface CodeService {
     void startUpdateWordDataisNull();
     void startUpdateIsUpdateIs0UpdateDateIsNullAndUpdateisUpdateIs3();
     void asyncCodeAttrToSubmeter();
+    void asyncShowSearch();
+
+    String getBarcodeInto(String barcode);
 }

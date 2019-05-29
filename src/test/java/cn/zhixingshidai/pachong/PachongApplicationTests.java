@@ -9,6 +9,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 @RunWith(SpringRunner.class)
@@ -52,14 +55,15 @@ public class PachongApplicationTests {
                 "                \"price\": \"29.80\"\n" +
                 "            }\n" +
                 "        }";*/
-        String ddd="{\"sdcsdc\":{\"sdcsdc\":false}}";
-        Type type = new TypeToken<Map<String,Object>>(){}.getType();
-        Map<String,String> jdMap = gson.fromJson(ddd, type);
+        String ddd = "{\"sdcsdc\":{\"sdcsdc\":false}}";
+        Type type = new TypeToken<Map<String, Object>>() {
+        }.getType();
+        Map<String, String> jdMap = gson.fromJson(ddd, type);
         System.out.println(jdMap);
     }
 
     @Test
-    public  void sdc() throws Exception {
+    public void sdc() throws Exception {
         StringBuilder stringBuilder = new StringBuilder();
 //        <span onclick="toLoginPage('http://www.2ge.cn/platform/user/toLogin.do')">http://www.2ge.cn/platform/user/toLogin.do</span>
 //	<script>
@@ -77,6 +81,18 @@ public class PachongApplicationTests {
         stringBuilder.append("</div>");
         MailUtil.sendMail("zhushaopeng@zhixingshidai.com", "跳转", stringBuilder.toString());
         MailUtil.sendMail("zhuzhu@zhixingshidai.com", "跳转", stringBuilder.toString());
+    }
+
+    @Test
+    public void c() {
+        List<Integer> idList = new ArrayList<>();
+        idList.add(2);
+        idList.add(3);
+        idList.add(4);
+        idList.add(7);
+        idList.add(1);
+        Collections.sort(idList, (o1, o2) -> o1.compareTo(o2));
+        idList.forEach(c->System.out.println(c));
     }
 
 }
