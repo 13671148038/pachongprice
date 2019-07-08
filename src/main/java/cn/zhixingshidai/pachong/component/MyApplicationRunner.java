@@ -26,12 +26,12 @@ public class MyApplicationRunner implements ApplicationRunner {
 //        wordService.asyncWordTypeId();
 //        wordService.asyncWordDeclareTypeId();
 //        codeService.startUpdateWordDataisNull();
-        codeService.asyncCodeAttrToSubmeter();
+        //codeService.asyncCodeAttrToSubmeter();
 //        codeService.asyncShowSearch();
 
-        System.out.println("开始执行完了");
+       // System.out.println("开始执行完了");
 //        cpsAdvertService.updateGoodsClassId();
-        System.out.println("全部执行完了");
+        //System.out.println("全部执行完了");
 
     }
 }
